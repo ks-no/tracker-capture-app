@@ -6,7 +6,7 @@ pipeline {
 
       environment {
         DHIS2_CORE_GIT_REPO = 'https://github.com/dhis2/dhis2-core.git'
-        DHIS2_CORE_KS_BRANCH = '2.36-ks-tracker'
+        DHIS2_CORE_KS_BRANCH = '2.36_ks'
 
         IMAGE_NAME = "fiks-dhis2-tracker-capture-app"
     }
