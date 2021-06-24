@@ -14,17 +14,67 @@ import {convertDatestringToDDMMYYYY} from "../utils/converters";
 
 export function addEventDataToInnreiseList(scope, serverResponse, teiAccessApiService, metaDataFactory) {
 
-    var dataValuesToExtract = [
-        INNREISE_AVREISELAND_DATA_ELEMENT_ID,
-        INNREISE_OPPFOLGINGSTATUS_ID,
-        INNREISE_KARANTENE_ALTERNATIV_TEXT_ID,
-        INNREISE_KARANTENE_ALTERNATIV_CODE_ID,
-        INNREISE_UNNTAK_TYPE_TEXT_ID,
-        INNREISE_UNNTAK_TYPE_CODE_ID,
-        INNREISE_KARANTENE_GJENOMFORING_TYPE_TEXT_ID,
-        INNREISE_KARANTENE_GJENOMFORING_TYPE_CODE_ID,
-        INNREISE_OPPHOLDSSTED_ID,
-        INNREISE_ARBEIDSGIVER_NAVN_ID
+    var eventDataElementStructArray = [
+        {eventId: INNREISEINFORMASJON_PROGRAM_STAGE_ID,
+            dataFields: [
+                {
+                    dataFieldId: INNREISE_AVREISELAND_DATA_ELEMENT_ID,
+                    dataFieldName: 'Avreiseland')
+
+                },
+                {
+                    dataFieldId: INNREISE_OPPFOLGINGSTATUS_ID,
+                    dataFieldName: 'Oppfolgingstatus',
+                    lookupId: STATUS_OPPFOLGNING_LOOKUP_ID
+                },
+                {
+                    dataFieldId: INNREISE_KARANTENE_ALTERNATIV_TEXT_ID,
+                    dataFieldName: 'Karantenetype_tekst',
+
+                },
+                {
+                    dataFieldId: INNREISE_KARANTENE_ALTERNATIV_CODE_ID,
+                    dataFieldName: 'Karantenetype_kode'
+
+                },
+                {
+                    dataFieldId: INNREISE_KARANTENE_ALTERNATIV_CODE_ID,
+                        dataFieldName: 'Karantenetype_tekst_short',
+                    lookupId: karantenekodeToShortTekst
+
+                },
+                {
+                    dataFieldId: INNREISE_UNNTAK_TYPE_TEXT_ID,
+                    dataFieldName: ,
+
+                },
+                {
+                    dataFieldId: INNREISE_UNNTAK_TYPE_CODE_ID,
+                    dataFieldName: ,
+
+                },
+                {
+                    dataFieldId: INNREISE_KARANTENE_GJENOMFORING_TYPE_TEXT_ID,
+                    dataFieldName: ,
+
+                },
+                {
+                    dataFieldId: INNREISE_KARANTENE_GJENOMFORING_TYPE_CODE_ID,
+                    dataFieldName: ,
+
+                },
+                {
+                    dataFieldId: INNREISE_OPPHOLDSSTED_ID,
+                    dataFieldName: ,
+
+                },
+                {
+                    dataFieldId: INNREISE_ARBEIDSGIVER_NAVN_ID,
+                    dataFieldName: ,
+
+                }
+                ]
+        }
     ];
     var teis = [];
     serverResponse.rows.forEach(function (row) {
@@ -40,15 +90,8 @@ export function addEventDataToInnreiseList(scope, serverResponse, teiAccessApiSe
         teiAccessApiService).then(eventData => {
         metaDataFactory.getAll('optionSets').then(function (optionSets) {
             try {
-                setHeader(serverResponse, 'Avreiseland');
-                setDataValue(serverResponse, eventData, INNREISE_AVREISELAND_DATA_ELEMENT_ID);
-
                 setHeader(serverResponse, 'Innreisedato');
                 setDataValue(serverResponse, eventData, 'eventDate', convertDatestringToDDMMYYYY);
-
-                setHeader(serverResponse, 'Oppfolgingstatus');
-                var statusLookup = status => optionSetsDataLookup(optionSets, STATUS_OPPFOLGNING_LOOKUP_ID, status);
-                setDataValue(serverResponse, eventData, INNREISE_OPPFOLGINGSTATUS_ID, statusLookup);
 
                 setHeader(serverResponse, 'Karantenetype_kode');
                 setDataValue(serverResponse, eventData, INNREISE_KARANTENE_ALTERNATIV_CODE_ID);
