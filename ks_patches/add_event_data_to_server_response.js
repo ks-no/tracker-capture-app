@@ -1,4 +1,3 @@
-
 // Example of expected structure of eventDataElementStructArray
 import {importEventToListAsync} from "./import_event_to_list";
 
@@ -14,34 +13,46 @@ var eventDataElementStructArrayTemplate = [
             }
         ]
     }
-    ];
+];
 
 export function addEventDataToServerResponse(eventDataElementStructArray, scope, serverResponse, teiAccessApiService, metaDataFactory) {
+    console.log('here')
     var teis = extractTeis(serverResponse);
 
     metaDataFactory.getAll('optionSets').then(function (optionSets) {
-        eventDataElementStructArray.forEach(eventDataElementStruct => {
-            var eventId = eventDataElementStruct.eventId;
-            var dataFields = eventDataElementStruct.dataFields;
-            var dataValuesToExtract = dataFields.map(field => field.dataFieldId);
-            importEventToListAsync(
-                teis,
-                scope.base.selectedProgram.id,
-                eventId,
-                scope.selectedOrgUnit.id,
-                dataValuesToExtract,
-                teiAccessApiService
-            ).then(eventData => {
-                dataFields.forEach(dataField => {
-                    setHeader(serverResponse, dataField.dataFieldName);
-                    var converter = dataField.converter ? dataField.converter : a => a;
-                    if (dataField.lookupId) {
-                        converter = status => converter(optionSetsDataLookup(optionSets, dataField.lookupId, status));
+        try {
+            eventDataElementStructArray.forEach(eventDataElementStruct => {
+                var eventId = eventDataElementStruct.eventId;
+                var dataFields = eventDataElementStruct.dataFields;
+                var dataValuesToExtract = dataFields.map(field => field.dataFieldId);
+                importEventToListAsync(
+                    teis,
+                    scope.base.selectedProgram.id,
+                    eventId,
+                    scope.selectedOrgUnit.id,
+                    dataValuesToExtract,
+                    teiAccessApiService
+                ).then(eventData => {
+                    try {
+                        dataFields.forEach(dataField => {
+                            setHeader(serverResponse, dataField.dataFieldName);
+                            var converter = dataField.converter ? dataField.converter : a => a;
+                            if (dataField.lookupId) {
+                                converter = status => optionSetsDataLookup(optionSets, dataField.lookupId, status);
+                            }
+                            setDataValue(serverResponse, eventData, dataField.dataFieldId, converter);
+                        });
+                        scope.setServerResponse(serverResponse);
+                    } catch (err) {
+                        console.log(err);
+                        scope.setServerResponse(serverResponse);
                     }
-                    setDataValue(serverResponse, eventData, dataField.dataFieldId, converter);
                 });
             });
-        });
+        } catch (err) {
+            scope.setServerResponse(serverResponse);
+        }
+
     });
 }
 
@@ -67,7 +78,7 @@ function setDataValue(serverResponse, eventData, dataId, dataConverter = a => a)
     serverResponse.rows.forEach(row => {
         var teiId = row[0];
         var dataValue;
-        if(eventData && teiId && eventData[teiId] && dataId && eventData[teiId][dataId]) {
+        if (eventData && teiId && eventData[teiId] && dataId && eventData[teiId][dataId]) {
             dataValue = dataConverter(eventData[teiId][dataId]);
         } else {
             dataValue = undefined;
