@@ -15,7 +15,6 @@ import {
 } from "../utils/constants";
 
 export function setCustomShowOnAttributes(attributes, programId) {
-    console.log(programId);
     if(programId === INNREISE_PROGRAM_ID) {
         attributes = attributes.map(attribute => {
             if(attributesToHideFromProfileInInnreise.find(attId => attId === attribute.id)) {
