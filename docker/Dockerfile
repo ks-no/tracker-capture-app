@@ -27,7 +27,7 @@ RUN apt-get -y update &&\
 
 COPY ./dhis.war ${CATALINA_BASE}/webapps/ROOT.war
 
-COPY config/tomcat/conf/server.xml ${CATALINA_BASE}/conf/server.xml
+COPY tomcat/conf/server.xml ${CATALINA_BASE}/conf/server.xml
 COPY config/tomcat/setenv.sh ${CATALINA_BASE}/bin/setenv.sh
 
 EXPOSE 8080
