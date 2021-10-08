@@ -32,7 +32,7 @@ COPY tomcat/setenv.sh ${CATALINA_BASE}/bin/setenv.sh
 
 EXPOSE 8080
 
-CMD "/opt/tomcat/bin/catalina.sh run >> ${CATALINA_BASE}/logs/catalina.out 2>&1"
+CMD "/opt/tomcat/bin/catalina.sh run >> ${CATALINA_BASE}/logs/catalina.out 2>&1 &"
 
 #CMD ["/opt/tomcat/bin/catalina.sh", "run"]
 
