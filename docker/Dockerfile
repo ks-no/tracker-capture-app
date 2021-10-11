@@ -34,6 +34,8 @@ EXPOSE 8080
 
 #CMD "${CATALINA_BASE}/bin/catalina.sh run >> ${CATALINA_BASE}/logs/catalina.out 2>&1 &"
 
-CMD ["/opt/tomcat/bin/catalina.sh", "run"]
+#CMD ["/opt/tomcat/bin/catalina.sh", "run"]
+
+CMD ["/bin/bash", "-c", "${CATALINA_BASE}/bin/catalina.sh run >> ${CATALINA_HOME}/logs/catalina.out 2>&1"]
 
 
