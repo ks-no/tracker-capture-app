@@ -1,14 +1,13 @@
-
 pipeline {
     agent {
         label 'linux-large'
     }
 
-      environment {
+    environment {
         DHIS2_CORE_GIT_REPO = 'https://github.com/dhis2/dhis2-core.git'
         DHIS2_CORE_KS_BRANCH = '2.36_ks'
 
-        IMAGE_NAME = "fiks-dhis2-tracker-capture-app"
+        IMAGE_NAME = "fiks-dhis2-app"
     }
 
     tools {
@@ -31,7 +30,7 @@ pipeline {
             }
         }
 
-        stage('check tools') {
+        stage('Check tools') {
             steps {
                 sh "node -v"
                 sh "npm -v"
@@ -46,11 +45,11 @@ pipeline {
                 }
             }
         }
-        stage('Build dhis'){
+        stage('Build dhis2') {
             steps {
                 dir('dhis2-core') {
                     git branch: "${DHIS2_CORE_KS_BRANCH}",
-                    url: "${DHIS2_CORE_GIT_REPO}"
+                            url: "${DHIS2_CORE_GIT_REPO}"
                     script {
                         sh "mvn clean install -f dhis-2/pom.xml -DskipTests"
                         sh "mvn clean install -U -f dhis-2/dhis-web/pom.xml -DskipTests"
@@ -64,7 +63,6 @@ pipeline {
 
                     script {
                         def tracker_capture_path = "dhis-web-tracker-capture"
-                        def docker_artifacts_path = "../dhis2-core/docker/artifacts/"
                         def war_file_name = "dhis.war"
 
                         sh "jar -xvf ../dhis2-core/dhis-2/dhis-web/dhis-web-portal/target/${war_file_name}"
@@ -84,5 +82,14 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy to dev') {
+            when {
+                branch 'v34_ks_playground'
+            }
+            steps {
+                build job: 'KS/fiks-dhis2-configuration/playground', parameters: [string(name: 'tag', value: env.CURRENT_VERSION)], wait: false, propagate: false
+            }
+       }
     }
 }
