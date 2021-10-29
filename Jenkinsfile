@@ -88,7 +88,7 @@ pipeline {
                 branch 'v34_ks_playground'
             }
             steps {
-                build job: 'KS/fiks-dhis2-configuration/playground', parameters: [string(name: 'tag', value: env.CURRENT_VERSION)], wait: false, propagate: false
+                build job: 'KS/dhis2-setup/master', parameters: [string(name: 'tag', value: env.CURRENT_VERSION)], wait: false, propagate: false
             }
        }
     }
