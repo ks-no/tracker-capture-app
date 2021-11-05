@@ -1108,7 +1108,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             }
         },
         get: function(entityUid, optionSets, attributesById){
-            var promise = $http.get( DHIS2URL + '/trackedEntityInstances/' +  entityUid + '.json').then(function(response){
+            var promise = $http({method: 'GET', url: DHIS2URL + '/trackedEntityInstances/' +  entityUid + '.json', headers: {'ingress-csrf': $cookies['ingress-csrf']} }).then(function(response){
                 var tei = response.data;
                 setTeiAttributeValues(tei.attributes, optionSets, attributesById);
                 return tei;
@@ -1130,14 +1130,14 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             return promise;
         },
         getRelationships: function(uid) {
-            var promise = $http.get( DHIS2URL + '/trackedEntityInstances/' + uid + '.json?fields=relationships').then(function(response){
+            var promise = $http({method: 'GET', url: DHIS2URL + '/trackedEntityInstances/' + uid + '.json?fields=relationships', headers: {'ingress-csrf': $cookies['ingress-csrf']} }).then(function(response){
                 var tei = response.data;
                 return tei.relationships;
             });
             return promise;
         },
         getTeiWithAllAvailableFields: function(entityUid, optionSets, attributesById) {
-            var promise = $http.get( DHIS2URL + '/trackedEntityInstances/' +  entityUid + '.json?fields=*').then(function(response){
+            var promise = $http({method: 'GET', url: DHIS2URL + '/trackedEntityInstances/' +  entityUid + '.json?fields=*', headers: {'ingress-csrf': $cookies['ingress-csrf']} }).then(function(response){
                 var tei = response.data;
                 setTeiAttributeValues(tei.attributes, optionSets, attributesById);
                 return tei;
@@ -1199,7 +1199,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             return promise;
         },
         delete: function(entityUid){
-            var promise = $http.delete(DHIS2URL + '/trackedEntityInstances/' + entityUid).then(function(response){
+            var promise = $http({method: 'DELETE', url: DHIS2URL + '/trackedEntityInstances/' + entityUid, headers: {'ingress-csrf': $cookies['ingress-csrf']} }).then(function(response){
                 return response.data;
             }, function (response) {
                 var errorBody;
@@ -1320,7 +1320,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             });
             formattedTei.attributes = attributes;
             var programFilter = programId ? "?program=" + programId : "";
-            var promise = $http.put( DHIS2URL + '/trackedEntityInstances/' + formattedTei.trackedEntityInstance + programFilter, formattedTei ).then(function(response){
+            var promise = $http({method: 'PUT', url: DHIS2URL + '/trackedEntityInstances/' + formattedTei.trackedEntityInstance + programFilter, data: formattedTei, headers: {'ingress-csrf': $cookies['ingress-csrf']} }).then(function(response){
                 return response.data;
             }, function(response){
                 NotificationService.showNotifcationDialog($translate.instant('update_error'), $translate.instant('failed_to_update_tei'), response);
@@ -1336,7 +1336,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             });
 
             formattedTei.attributes = attributes;
-            var promise = $http.post( DHIS2URL + '/trackedEntityInstances' , formattedTei ).then(function(response){
+            var promise = $http({method: 'POST', url: DHIS2URL + '/trackedEntityInstances', data: formattedTei, headers: {'ingress-csrf': $cookies['ingress-csrf']} }).then(function(response){
                 return response.data;
             }, function(response){
                 return response.data;
