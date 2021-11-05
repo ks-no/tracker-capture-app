@@ -872,21 +872,21 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     service.get = function(tei, program, url){
         // return callApi(function() { return $http.get(url) }, tei, program);
 
-        return callApi(function() { return $http.get({url: url, headers: {'ingress-csrf': $cookies['ingress-csrf']} }) }, tei, program);
+        return callApi(function() { return $http({method: 'GET', url: url, headers: {'ingress-csrf': $cookies['ingress-csrf']} }) }, tei, program);
     }
 
     service.post = function(tei,program,url, data){
         // return callApi(function() { return $http.post(url, data) }, tei, program);
 
-        return callApi(function() { return $http.post({url: url, data: data, headers: {'ingress-csrf': $cookies['ingress-csrf']}}) }, tei, program);
+        return callApi(function() { return $http({method: 'POST', url: url, data: data, headers: {'ingress-csrf': $cookies['ingress-csrf']}}) }, tei, program);
     }
 
     service.put = function(tei,program,url, data){
-        return callApi(function() { return $http.put({url: url, data: data, headers: {'ingress-csrf': $cookies['ingress-csrf']}}) }, tei, program);
+        return callApi(function() { return $http({method: 'PUT', url: url, data: data, headers: {'ingress-csrf': $cookies['ingress-csrf']}}) }, tei, program);
     }
 
     service.delete = function(tei,program,url, data){
-        return callApi(function() { return $http.delete({url: url, data: data, headers: {'ingress-csrf': $cookies['ingress-csrf']}}) }, tei, program);
+        return callApi(function() { return $http({method: 'DELETE', url: url, data: data, headers: {'ingress-csrf': $cookies['ingress-csrf']}}) }, tei, program);
     }
     return service;
 })
