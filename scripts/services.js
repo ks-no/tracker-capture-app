@@ -870,19 +870,23 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         auditCancelledSettings = settings;
     }
     service.get = function(tei, program, url){
-        return callApi(function() { return $http.get(url) }, tei, program);
+        // return callApi(function() { return $http.get(url) }, tei, program);
+
+        return callApi(function() { return $http.get({url: url, headers: {'ingress-csrf': $cookies['ingress-csrf']} }) }, tei, program);
     }
 
     service.post = function(tei,program,url, data){
-        return callApi(function() { return $http.post(url, data) }, tei, program);
+        // return callApi(function() { return $http.post(url, data) }, tei, program);
+
+        return callApi(function() { return $http.post({url: url, data: data, headers: {'ingress-csrf': $cookies['ingress-csrf']}}) }, tei, program);
     }
 
     service.put = function(tei,program,url, data){
-        return callApi(function() { return $http.put(url, data) }, tei, program);
+        return callApi(function() { return $http.put({url: url, data: data, headers: {'ingress-csrf': $cookies['ingress-csrf']}}) }, tei, program);
     }
 
     service.delete = function(tei,program,url, data){
-        return callApi(function() { return $http.delete(url, data) }, tei, program);
+        return callApi(function() { return $http.delete({url: url, data: data, headers: {'ingress-csrf': $cookies['ingress-csrf']}}) }, tei, program);
     }
     return service;
 })
@@ -936,7 +940,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 })
 
 /* Service for getting tracked entity instances */
-.factory('TEIService', function($http, orderByFilter, $translate, DHIS2URL, $q, AttributesFactory, CommonUtils, CurrentSelection, DateUtils, NotificationService, TeiAccessApiService) {
+.factory('TEIService', function($http, orderByFilter, $translate, DHIS2URL, $q, AttributesFactory, CommonUtils, CurrentSelection, DateUtils, NotificationService, TeiAccessApiService, $cookies) {
     var cachedTeiWithProgramData = null;
     var errorHeader = $translate.instant("error");
     var getSearchUrl = function(type,ouId, ouMode, queryUrl, programOrTETUrl, attributeUrl, pager, paging, format){
