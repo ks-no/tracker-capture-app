@@ -940,7 +940,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 })
 
 /* Service for getting tracked entity instances */
-.factory('TEIService', function($http, orderByFilter, $translate, DHIS2URL, $q, AttributesFactory, CommonUtils, CurrentSelection, DateUtils, NotificationService, TeiAccessApiService) {
+.factory('TEIService', function($http, orderByFilter, $translate, DHIS2URL, $q, AttributesFactory, CommonUtils, CurrentSelection, DateUtils, NotificationService, TeiAccessApiService,$cookies) {
     var cachedTeiWithProgramData = null;
     var errorHeader = $translate.instant("error");
     var getSearchUrl = function(type,ouId, ouMode, queryUrl, programOrTETUrl, attributeUrl, pager, paging, format){
@@ -1214,6 +1214,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         },
         searchCount: function(ouId, ouMode, queryUrl, programOrTETUrl, attributeUrl, pager, paging, format){
             var url = getSearchUrl("count",ouId, ouMode,queryUrl, programOrTETUrl, attributeUrl, pager, paging, format);
+            console.log('KALLER COUNT')
             return $http.get( url ).then(function(response)
             {
                 if(response && response.data) return response.data;
@@ -1223,7 +1224,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         search: function(ouId, ouMode, queryUrl, programOrTETUrl, attributeUrl, pager, paging, format, attributesList, attrNamesIdMap, optionSets) {
             var deferred = $q.defer();
             var url = getSearchUrl("query",ouId, ouMode,queryUrl, programOrTETUrl, attributeUrl, pager, paging, format);
-            $http.get( url ).then(function(response){
+            $http({method: 'GET', url: url, headers: {'ingress-csrf': $cookies['ingress-csrf']}}).then(function(response){
                 var xmlData, rows, headers, index, itemName, value, jsonData;
                 var trackedEntityInstance, attributesById;
                 if (format) {
