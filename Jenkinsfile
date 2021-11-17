@@ -84,9 +84,9 @@ pipeline {
 //        }
 
         stage('Build and deploy') {
-            when {
-                branch 'v34_ks_playground'
-            }
+//            when {
+//                branch 'v34_ks_playground'
+//            }
             steps {
                 build job: 'KS/dhis2-setup/openshift', parameters: [string(name: 'tag', value: env.CURRENT_VERSION)], wait: false, propagate: false
             }
