@@ -14,9 +14,6 @@ pipeline {
                 script {
                     env.GIT_SHA = sh(returnStdout: true, script: 'git rev-parse HEAD').substring(0, 7)
                     env.GIT_BRANCH = sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD')
-                    env.WORKSPACE = pwd()
-                    env.CURRENT_VERSION = readFile "${env.WORKSPACE}/version"
-                    env.CURRENT_VERSION = env.CURRENT_VERSION.replace("SNAPSHOT", env.GIT_SHA)
                 }
             }
         }
