@@ -39,7 +39,7 @@ pipeline {
                 branch 'v34_ks_playground'
             }
             steps {
-                build job: 'KS/dhis2-setup/openshift_v2', parameters: [string(name: 'tag_tracker_capture', value: env.GIT_SHA), string(name: 'tracker_capture_branch', value: env.GIT_BRANCH)], wait: false, propagate: false
+                build job: 'KS/dhis2-setup/openshift_v2', parameters: [string(name: 'tag_tracker_capture', value: env.GIT_SHA), string(name: 'branch_tracker_capture', value: env.GIT_BRANCH)], wait: false, propagate: false
             }
        }
     }
