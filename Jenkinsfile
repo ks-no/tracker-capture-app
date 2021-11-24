@@ -14,9 +14,6 @@ pipeline {
                 script {
                     env.GIT_SHA = sh(returnStdout: true, script: 'git rev-parse HEAD').substring(0, 7)
                     env.GIT_BRANCH = sh(returnStdout: true, script: 'git rev-parse --abbrev-ref HEAD')
-                    env.WORKSPACE = pwd()
-                    env.CURRENT_VERSION = readFile "${env.WORKSPACE}/version"
-                    env.CURRENT_VERSION = env.CURRENT_VERSION.replace("SNAPSHOT", env.GIT_SHA)
                 }
             }
         }
@@ -38,11 +35,11 @@ pipeline {
         }
 
         stage('Build and deploy') {
-            when {
-                branch 'v34_ks_playground'
-            }
+//            when {
+//                branch 'v34_ks_playground'
+//            }
             steps {
-                build job: 'KS/dhis2-setup/openshift', parameters: [string(name: 'tag_tracker_capture', value: env.GIT_SHA), string(name: 'tracker_capture_branch', value: env.GIT_BRANCH)], wait: false, propagate: false
+                build job: 'KS/dhis2-setup/openshift_v2', parameters: [string(name: 'tag_tracker_capture', value: env.GIT_SHA), string(name: 'branch_tracker_capture', value: env.GIT_BRANCH)], wait: false, propagate: false
             }
        }
     }
