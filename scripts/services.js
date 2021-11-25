@@ -2990,7 +2990,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         if(workingList.id == 'vo6JLWsbyMj') {
             searchParams.programUrl += '&filter=C225m3EOPRo:IN:false';
         }
-        if(workingList.id === 'idselvregis') {
+        if(workingList.id === 'QtdRocAYCCU') {
             searchParams.programUrl += '&filter=FKviB19WReU:IN:false';
         }
         if(workingList.enrollmentCreatedPeriod){
