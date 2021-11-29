@@ -2991,7 +2991,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             searchParams.programUrl += '&filter=C225m3EOPRo:IN:false';
         }
         if(workingList.id === 'QtdRocAYCCU') {
-            searchParams.programUrl += '&filter=FKviB19WReU:IN:false';
+            searchParams.programUrl += '&filter=FKviB19WReU:IN:true';
         }
         if(workingList.enrollmentCreatedPeriod){
             var enrollmentStartDate = moment().add(workingList.enrollmentCreatedPeriod.periodFrom, 'days').format("YYYY-MM-DD");
