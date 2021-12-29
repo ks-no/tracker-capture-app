@@ -402,7 +402,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             return def.promise;
         },
         delete: function(uid){
-            var promise = $http({method: 'DELETE', url: DHIS2URL + '/relationships/' +  uid, headers: {'ingress-csrf': $cookies['ingress-csrf']}})
+           var promise = $http({method: 'DELETE', url: DHIS2URL + '/relationships/' +  uid, headers: {'ingress-csrf': $cookies['ingress-csrf']}})
                 .then(function(response){
                     if(!response || !response.data || response.data.status !== 'OK'){
                         var errorBody = $translate.instant('failed_to_delete_relationship');
@@ -789,7 +789,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 })
 
 
-.factory('TeiAccessApiService', function($http,$q,$modal,$cookies){
+.factory('TeiAccessApiService', function($http,$q,$modal, $cookies){
     var auditCancelledSettings = {};
     var needAuditError = {
         code: 401,
@@ -836,7 +836,12 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             program: program,
             reason: auditMessage
         }*/
-        return $http.post(DHIS2URL+'/tracker/ownership/override?trackedEntityInstance='+tei+'&program='+program+'&reason='+auditMessage, obj);
+        return $http({
+                method: 'POST',
+                url: DHIS2URL+'/tracker/ownership/override?trackedEntityInstance='+tei+'&program='+program+'&reason='+auditMessage,
+                data: obj,
+                headers: {'ingress-csrf': $cookies['ingress-csrf']}
+            });
     }
 
     var handleAudit = function(tei,program, postAuditApiFn){
@@ -935,7 +940,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 })
 
 /* Service for getting tracked entity instances */
-.factory('TEIService', function($http, orderByFilter, $translate, DHIS2URL, $q, AttributesFactory, CommonUtils, CurrentSelection, DateUtils, NotificationService, TeiAccessApiService,$cookies) {
+.factory('TEIService', function($http, orderByFilter, $translate, DHIS2URL, $q, AttributesFactory, CommonUtils, CurrentSelection, DateUtils, NotificationService, TeiAccessApiService, $cookies) {
     var cachedTeiWithProgramData = null;
     var errorHeader = $translate.instant("error");
     var getSearchUrl = function(type,ouId, ouMode, queryUrl, programOrTETUrl, attributeUrl, pager, paging, format){
@@ -1103,7 +1108,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             }
         },
         get: function(entityUid, optionSets, attributesById){
-            var promise = $http({method: 'GET', url: DHIS2URL + '/trackedEntityInstances/' +  entityUid + '.json', headers: {'ingress-csrf': $cookies['ingress-csrf']} }).then(function(response){
+           var promise = $http({method: 'GET', url: DHIS2URL + '/trackedEntityInstances/' +  entityUid + '.json', headers: {'ingress-csrf': $cookies['ingress-csrf']} }).then(function(response){
                 var tei = response.data;
                 setTeiAttributeValues(tei.attributes, optionSets, attributesById);
                 return tei;
@@ -1209,7 +1214,6 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         },
         searchCount: function(ouId, ouMode, queryUrl, programOrTETUrl, attributeUrl, pager, paging, format){
             var url = getSearchUrl("count",ouId, ouMode,queryUrl, programOrTETUrl, attributeUrl, pager, paging, format);
-            console.log('KALLER COUNT')
             return $http({method: 'GET', url: url, headers: {'ingress-csrf': $cookies['ingress-csrf']}}).then(function(response)
             {
                 if(response && response.data) return response.data;
@@ -1312,7 +1316,12 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             var formattedTei = convertFromUserToApi(angular.copy(tei));
             var attributes = [];
             angular.forEach(formattedTei.attributes, function(att){
-                attributes.push({attribute: att.attribute, value: CommonUtils.formatDataValue(null, att.value, attributesById[att.attribute], optionSets, 'API')});
+                if(att && att.attribute) {
+                    attributes.push({
+                        attribute: att.attribute,
+                        value: CommonUtils.formatDataValue(null, att.value, attributesById[att.attribute], optionSets, 'API')
+                    });
+                }
             });
             formattedTei.attributes = attributes;
             var programFilter = programId ? "?program=" + programId : "";
@@ -1560,7 +1569,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 })
 
 /* factory for handling events */
-.factory('DHIS2EventFactory', function($http, DHIS2URL, NotificationService, $translate, TeiAccessApiService,$cookies) {
+.factory('DHIS2EventFactory', function($http, DHIS2URL, NotificationService, $translate, TeiAccessApiService, $cookies) {
 
     var skipPaging = "&skipPaging=true";
     var errorHeader = $translate.instant("error");
@@ -1729,7 +1738,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 })
 
 /* factory for handling event reports */
-.factory('EventReportService', function($http, DHIS2URL, $translate, NotificationService,$cookies) {
+.factory('EventReportService', function($http, DHIS2URL, $translate, NotificationService, $cookies) {
     var errorHeader = $translate.instant("error");
     return {
 
@@ -2197,10 +2206,6 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                     entity.inactive = row[6] !== "" ? row[6] : false;
                     entity.followUp = isFollowUp;
 
-                    if(grid.headers[grid.headers.length-2].name == 'lastdate'){
-                        entity.lastdate = row[row.length-2];
-                    }
-
                     if(grid.headers[grid.headers.length-1].column == 'TransferStatus'){
                         //entity.followUp =  entity.followUp || row[row.length-1] == "ACTIVE";
                     }
@@ -2208,7 +2213,6 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                     for (var i = 7; i < row.length; i++) {
                         if (row[i] && row[i] !== '') {
                             var val = row[i];
-
                             if (attributesById[grid.headers[i].name] &&
                                 attributesById[grid.headers[i].name].optionSetValue &&
                                 optionSets &&
@@ -2290,7 +2294,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             });
             return {columns: columns, filterTypes: filterTypes, filterText: filterText};
         },
-        makeGridColumns: function(attributes,config, savedGridColumnsKeyMap,lastDateName){
+        makeGridColumns: function(attributes,config, savedGridColumnsKeyMap){
             var gridColumns = [
                 {id: 'orgUnitName', displayName: $translate.instant('registering_unit'), show: true, valueType: 'TEXT'},
                 {id: 'created', displayName: $translate.instant('registration_date'), show: true, valueType: 'DATE'},
@@ -2310,10 +2314,6 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                     gridColumns.push(gridColumn);
                 }
             });
-
-            if(lastDateName) {
-                gridColumns.push({id: 'last_date', displayName: $translate.instant(lastDateName), show: true, valueType: 'DATE'});
-            }
 
             return gridColumns;
         },
@@ -2764,7 +2764,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     this.eventCreationActions = { add: 'ADD',  schedule: 'SCHEDULE', referral: 'REFERRAL'};
 })
 
-.service('MessagingService', function($http, $translate,  NotificationService, DHIS2URL,$cookies){
+.service('MessagingService', function($http, $translate,  NotificationService, DHIS2URL, $cookies){
     return {
         sendMessage: function(message){
             var promise = $http({method: 'POST', url: DHIS2URL + '/messages', data: message, headers: {'ingress-csrf': $cookies['ingress-csrf']}}).then(function(response){
@@ -2797,7 +2797,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         }
     };
 })
-.service('ProgramWorkingListService', function($http,$q,$filter, orderByFilter,orderByKeyFilter, TEIService,$cookies){
+.service('ProgramWorkingListService', function($http,$q,$filter, orderByFilter,orderByKeyFilter, TEIService, $cookies){
     var workingListsByProgram = null;
     var cachedMultipleEventFiltersData = {};
     var getDefaultWorkingLists = function(program){
@@ -2983,8 +2983,11 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         if(sortColumn){
             searchParams.sortUrl = "&order="+sortColumn.id+':'+sortColumn.direction;
         }
-        if(workingList.id == 'vo6JLWsbyMj') {
+        if(workingList.id === 'vo6JLWsbyMj') { //ikke sendte klinikermeldinger
             searchParams.programUrl += '&filter=C225m3EOPRo:IN:false';
+        }
+        if(workingList.id === 'QtdRocAYCCU') { //selvregistrering
+            searchParams.programUrl += '&filter=FKviB19WReU:IN:true';
         }
         if(workingList.enrollmentCreatedPeriod){
             var enrollmentStartDate = moment().add(workingList.enrollmentCreatedPeriod.periodFrom, 'days').format("YYYY-MM-DD");

@@ -1,16 +1,63 @@
 <div class="modal-header page">
-    <h3>Vaksineringer</h3>
+    <h3>Vaksinestatus</h3>
 </div>
 <div class="modal-body page">
-    <table class="dhis2-list-table-striped default-form-table">
-        <tr ng-repeat="vaccine in gridData">
-            <td><b>Dose {{$index +1}}</b> <br>{{dateFromItem(vaccine)}}
-            <td><div style="padding-bottom:5px">{{vaccine.vaccineCode.display}}</span>
-        </tr>
-    </table>
-    <div ng-if="!gridData || gridData.length == 0">
-        {{noVaccinesMessage}}
+    <div ng-if="immunization && immunization.length > 0">
+        <div>
+            Informasjon hentet fra SYSVAK er vist nedenfor. Dersom feltene i Fiks Smittesporing ikke er utfylt eller registrert med ukorrekte data, så kan du enkelt overskrive med informasjon hentet fra SYSVAK.
+        </div>
+        <table class="dhis2-list-table-striped default-form-table">
+            <th colspan="2" style="text-align: center">Fra SYSVAK </th>
+            <th style="text-align: center">Registrert i Fiks Smittesporing</th>
+            <tr ng-repeat="vaccine in sysvakVaccines">
+                <td><b>Dose {{$index +1}}</b>  <br>{{vaccine.date}} <span class="ks-grey" ng-if="vaccine.monthsAgo || vaccine.monthsAgo === 0">({{vaccine.monthsAgo}}+ mnd)</span>
+                <td><div style="padding-bottom:5px">{{vaccine.name}}</span>
+                <td style="border-left-style: solid; border-left-width: 1px">
+                <div ng-if="$index < 3">
+                    <span ng-if="!vaccine.vaccineIsInProfile">Mangler</span>
+                    <div ng-if="vaccine.vaccineIsInProfile && vaccine.dateMismatch">
+                        <span ng-if="vaccine.profileDose.date">
+                            Ulik dato: <span class="ks-red-markup">{{vaccine.profileDose.date}}</span>
+                        </span>
+                        <span ng-if="!vaccine.profileDose.date">
+                            Dato mangler
+                        </span>
+                    </div>
+                    <div ng-if="vaccine.vaccineIsInProfile && vaccine.nameMismatch ">
+                        <span ng-if="vaccine.profileDose.name">
+                            Ulik type: <span class="ks-red-markup">{{vaccine.profileDose.name}}</span>
+                        </span>
+                        <span ng-if="!vaccine.profileDose.name">
+                            Type mangler
+                        </span>
+                    </div>
+                    <span ng-if="vaccine.vaccineIsInProfile && !vaccine.nameMismatch && !vaccine.dateMismatch">Registrert</span>
+                </div>
+                <div ng-if="$index >= 3">
+                    Kan ikke registrere mer enn 3 doser
+                </div>
+
+            </td>
+        </table>
+        <div ng-if="canUpdate">
+            <h3>Oppdater vaksinestatus i profil</h3>
+            <p>
+                NB: Dette vil overskrive alle vaksinetype- og datofeltene i profilen
+            </p>
+            <div ng-if="showError" class="alert alert-warning">
+                Noe feilet ved oppdatering av vaksinestatus. Prøv igjen senere, ev. fyll ut manuelt.
+            </div>
+
+            <button class="btn btn-primary" data-ng-click="registerVaccineInProfile()">Oppdater vaksinestatus
+            </button>
+        </div>
+        <div ng-if="!canUpdate">
+            <h3>Vaksinestatus er synkronisert</h3>
+            <p>Vaksinestatus i Fiks Smittesporing samsvarer med SYSVAK</p>
+        </div>
     </div>
+    <div ng-if="!immunization || immunization.length == 0">
+        {{noVaccinesMessage}}
 </div>
 <div class="modal-footer page modal-search-bottom">
     <div class="modal-search-bottom-buttons">

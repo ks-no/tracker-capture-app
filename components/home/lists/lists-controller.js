@@ -31,7 +31,8 @@ trackerCapture.controller('ListsController',function(
     FNrLookupService,
     OperatorFactory,
     ModalService,
-    $http) {
+    $http,
+    $cookies) {
         var ouModes = [{name: 'SELECTED'}, {name: 'CHILDREN'}, {name: 'DESCENDANTS'}, {name: 'ACCESSIBLE'}];
         var userGridColumns = null;
         var defaultCustomWorkingListValues = { ouMode: ouModes[0], programStatus: ""};
@@ -89,24 +90,9 @@ trackerCapture.controller('ListsController',function(
             if($scope.base.selectedProgram){
                 return UserDataStoreService.get(gridColumnsContainer, $scope.base.selectedProgram.id).then(function(savedGridColumns){
                     var gridColumnConfig = { defaultRange: {start: 3, end: 7}};
-                    var lastDateName = $scope.base.selectedProgram.id == 'uYjxkTbwRNf' ? 'last_date_in_isolation' : $scope.base.selectedProgram.id == 'DM9n1bUw8W8' ? 'last_date_in_quarantine' : '';
 
-                    $scope.gridColumns = TEIGridService.makeGridColumns($scope.programAttributes,gridColumnConfig, savedGridColumns, lastDateName);
+                    $scope.gridColumns = TEIGridService.makeGridColumns($scope.programAttributes,gridColumnConfig, savedGridColumns);
                     $scope.gridColumns = setCustomShowOnAttributesInList($scope.gridColumns, $scope.base.selectedProgram.id);
-                    /*
-                    $scope.gridColumns = [];
-                    angular.forEach($scope.programAttributes, function(attr){
-                        if(attr.displayInListNoProgram){
-                            var gridColumn = {id: attr.id, displayName: attr.displayName, show: false, valueType: attr.valueType};
-                            if(savedGridColumns[attr.id]){
-                                gridColumn.show = savedGridColumns[attr.id].show;
-                            }else if(attr.programTrackedEntityAttribute.displayInList){
-                                gridColumn.show = true;
-                            }
-                            $scope.gridColumns.push(gridColumn);
-                        }
-
-                    });*/
                 });
             }
             return resolvedEmptyPromise();
@@ -200,9 +186,24 @@ trackerCapture.controller('ListsController',function(
             $scope.showCustomWorkingListInline = false;
             $scope.currentTrackedEntityList = { type: type, config: config, data: data };
             if(!$scope.currentTrackedEntityList.sortColumn){
-                $scope.currentTrackedEntityList.sortColumn = {
-                    id: 'created',
-                    direction: 'asc',
+                if( $scope.currentTrackedEntityList.config.program && $scope.currentTrackedEntityList.config.program.id == 'uYjxkTbwRNf') {
+                    //Indeks
+                    $scope.currentTrackedEntityList.sortColumn = {
+                        id: 'X4VPaAa0RZ8',
+                        direction: 'desc',
+                    }
+                } else if( $scope.currentTrackedEntityList.config.program && $scope.currentTrackedEntityList.config.program.id == 'DM9n1bUw8W8') {
+                    //Nærkontakt
+                    $scope.currentTrackedEntityList.sortColumn = {
+                        id: 'LSHcKMBLofN',
+                        direction: 'desc',
+                    }
+                }
+                else {
+                    $scope.currentTrackedEntityList.sortColumn = {
+                        id: 'created',
+                        direction: 'desc',
+                    }
                 }
             }
         }
@@ -243,18 +244,6 @@ trackerCapture.controller('ListsController',function(
                 }
                 TEIService.getListWithProgramData(allTeis,$scope.base.selectedProgram.id,dataElement,programStage,$scope.selectedOrgUnit.id,transferStage).then(function(dateDictionary){
                     serverResponse.rows.forEach(async function(row){
-                        if(dateDictionary[row[0]] && dateDictionary[row[0]].enrollmentDate){
-                            //Set enrollment date instead of created date:
-                            row[1] = (dateDictionary[row[0]].enrollmentDate);
-                        }
-
-                        if(dateDictionary[row[0]] && dateDictionary[row[0]].dataValue){
-                            row.push(dateDictionary[row[0]].dataValue);
-                        }
-                        else {
-                            row.push('');
-                        }
-
                         if(dateDictionary[row[0]] && dateDictionary[row[0]].transferStatus){
                             row[4] = "Overført";
                             row.push(dateDictionary[row[0]].transferStatus);
@@ -264,20 +253,7 @@ trackerCapture.controller('ListsController',function(
                         }
                     });
 
-                    serverResponse.headers.push( {column: "LastDate", hidden: false, meta: false, name: "last_date", type:"java.lang.String" });
                     serverResponse.headers.push( {column: "TransferStatus", hidden: false, meta: false, name: "Overføringsstatus", type:"java.lang.String" });
-
-                    if( $scope.currentTrackedEntityList.sortColumn.id == 'created' ) {
-                        serverResponse.rows = $filter('orderBy')(serverResponse.rows, function(tei) {
-                            return tei[1];
-                        }, $scope.currentTrackedEntityList.sortColumn.direction != 'desc');
-                    }
-
-                    if( $scope.currentTrackedEntityList.sortColumn.id == 'last_date' ) {
-                        serverResponse.rows = $filter('orderBy')(serverResponse.rows, function(tei) {
-                            return tei[tei.length - 2];
-                        }, $scope.currentTrackedEntityList.sortColumn.direction != 'desc');
-                    }
 
                     $scope.addTildeltToTildeltListConditionally(serverResponse);
                     $scope.setServerResponse(serverResponse);
@@ -629,7 +605,7 @@ trackerCapture.controller('ListsController',function(
                 const programId = $scope.base.selectedProgram.id;
                 TEIService.getActiveEnrollments(selectedTeis, programId, $scope.selectedOrgUnit.id).then(function(enrollments) {
                     enrollments.enrollments.forEach((enrollment) => enrollment.status = 'COMPLETED');
-                    $http.post(DHIS2URL + '/enrollments', enrollments).then(function(){
+                    $http({method: 'POST', url: DHIS2URL + '/enrollments', data: enrollments, headers: {'ingress-csrf': $cookies['ingress-csrf']}}).then(function(){
                         $scope.setWorkingList($scope.currentTrackedEntityList.config);
                     });
                 })
