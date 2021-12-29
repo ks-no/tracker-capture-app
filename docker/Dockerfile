@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 
-ENV TOMCAT_URL=https://apache.uib.no/tomcat/tomcat-8/v8.5.72/bin/apache-tomcat-8.5.72.tar.gz \
+ENV TOMCAT_URL=https://apache.uib.no/tomcat/tomcat-8/v8.5.73/bin/apache-tomcat-8.5.73.tar.gz \
     CATALINA_HOME=/opt/tomcat \
     CATALINA_BASE=/opt/tomcat-dhis \
     LANG=en_US.UTF-8 \
