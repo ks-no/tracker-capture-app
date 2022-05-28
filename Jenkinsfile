@@ -3,6 +3,13 @@ pipeline {
         label 'linux'
     }
 
+    options {
+        timestamps()
+        disableConcurrentBuilds()
+        buildDiscarder(logRotator(numToKeepStr: '40', artifactNumToKeepStr: '40'))
+        timeout(time: 1, unit: 'HOURS')
+    }
+
     tools {
         nodejs "node-LTS"
     }
@@ -42,5 +49,11 @@ pipeline {
                 build job: 'KS/dhis2-setup/to_openshift', parameters: [booleanParam(name: 'isTriggeredFromTrackerCapture', value: true), string(name: 'tag_tracker_capture', value: env.GIT_SHA), string(name: 'branch_tracker_capture', value: env.GIT_BRANCH)], wait: false, propagate: false
             }
        }
+    }
+
+    post {
+        always {
+            deleteDir()
+        }
     }
 }
