@@ -59,9 +59,9 @@ var d2Controllers = angular.module('d2Controllers', [])
     $scope.selectedTileKey = 'openstreetmap';           
     $scope.tilesDictionary = {
         openstreetmap: {
-            url: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
             options: {
-                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" rel="noopener noreferrer">OpenStreetMap</a> contributors'
             }
         },
         googlemap: {
