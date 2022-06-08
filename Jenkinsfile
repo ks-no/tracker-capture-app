@@ -43,7 +43,7 @@ pipeline {
 
         stage('Build and deploy') {
             when {
-                branch 'SMITTE-248_openshift'
+                branch 'main_ks'
             }
             steps {
                 build job: 'KS/dhis2-setup/to_openshift', parameters: [booleanParam(name: 'isTriggeredFromTrackerCapture', value: true), string(name: 'tag_tracker_capture', value: env.GIT_SHA), string(name: 'branch_tracker_capture', value: env.GIT_BRANCH)], wait: false, propagate: false
