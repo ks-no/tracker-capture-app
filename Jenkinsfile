@@ -43,7 +43,10 @@ pipeline {
 
         stage('Build and deploy') {
             when {
-                branch 'main_ks'
+                anyOf {
+                    branch 'main_ks'
+                    branch 'helge/kopier_tb_paavist_dataelement_til_tea'
+                }
             }
             steps {
                 build job: 'KS/dhis2-setup/master', parameters: [booleanParam(name: 'isTriggeredFromTrackerCapture', value: true), string(name: 'tag_tracker_capture', value: env.GIT_SHA), string(name: 'branch_tracker_capture', value: env.GIT_BRANCH)], wait: false, propagate: false
