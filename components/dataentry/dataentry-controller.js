@@ -4,7 +4,8 @@ import {disableCompleteIncompleteEventConfirmation} from "../../ks_patches/custo
 import { INNREISEINFORMASJON_PROGRAM_STAGE_ID} from "../../utils/constants";
 import {
     INDEKS_SISTE_ISOLASJONSDATO,
-    NAERKONTAKT_SISTE_KARANTENEDATO
+    NAERKONTAKT_SISTE_KARANTENEDATO,
+    TUBERKULOSE_PAAVIST
 } from "../../utils/constants";
 
 var trackerCapture = angular.module('trackerCapture');
@@ -1803,11 +1804,14 @@ trackerCapture.controller('DataEntryController',
                 }
 
                 //Handle updated last isolation date
-                if( prStDe.id == INDEKS_SISTE_ISOLASJONSDATO ) {
+                if( prStDe.id === INDEKS_SISTE_ISOLASJONSDATO ) {
                     $rootScope.$broadcast('last-isolation-date-updated', {date: value});
                 }
-                else if ( prStDe.id == NAERKONTAKT_SISTE_KARANTENEDATO ) {
+                else if ( prStDe.id === NAERKONTAKT_SISTE_KARANTENEDATO ) {
                     $rootScope.$broadcast('last-quarantine-date-updated', {date: value});
+                }
+                else if ( prStDe.id === TUBERKULOSE_PAAVIST ) {
+                    $rootScope.$broadcast('tb-test_result-updated', {result: value});
                 }
             });
 
