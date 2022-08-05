@@ -74,7 +74,6 @@ export const PROFIL_VAKSINE_3_TYPE_ID = 'zbLvlxnfL3i';
 export const PROFIL_VAKSINE_3_DATO_ID = 'TtvEl8Fjqjp';
 export const PROFIL_VAKSINE_4_TYPE_ID = 'g25zWgTxeyW';
 export const PROFIL_VAKSINE_4_DATO_ID = 'qP0ThbF052n';
-export const PROFIL_VAKSINE_4_DATO_ID = 'qP0ThbF052n';
 
 // TB attributter
 export const TB_PROFIL_TUBERKULOSE_PAAVIST = 'CYOl98TYOR5';
