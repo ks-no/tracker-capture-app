@@ -45,7 +45,6 @@ pipeline {
             when {
                 anyOf {
                     branch 'main_ks'
-                    branch 'helge/kopier_tb_paavist_dataelement_til_tea'
                 }
             }
             steps {
