@@ -16,6 +16,7 @@ import {
     PROFIL_SISTE_ISOLASJONSDATO,
     PROFIL_SISTE_KARANTENEDATO,
     PROFIL_NASJONALT_FELLES_HJELPENUMMER,
+    TB_PROFIL_TUBERKULOSE_PAAVIST
 } from "../../utils/constants";
 import {makeHyphensInKodebeskrivelseNonBreaking} from "../../ks_patches/provesvar_utils";
 import {setCustomShowOnAttributes} from "../../ks_patches/hide_show_attributes";
@@ -1594,6 +1595,12 @@ trackerCapture.controller('RegistrationController',
         $scope.registerEntity(null);
     });
 
+    $scope.$on('tb-test_result-updated', function(event, args) {
+        $scope.tei[TB_PROFIL_TUBERKULOSE_PAAVIST] = args.result;
+        $scope.selectedTei[TB_PROFIL_TUBERKULOSE_PAAVIST] = args.result;
+
+        $scope.registerEntity(null);
+    });
 
     $scope.sendNotification = function() {
 

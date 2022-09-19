@@ -2997,6 +2997,9 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         if(workingList.id === 'QtdRocAYCCU' || workingList.id === 'VZOuDZ7p7mz') { //selvregistrering
             searchParams.programUrl += '&filter=FKviB19WReU:IN:true';
         }
+        if(workingList.id === 'vd7fXsMSst5') { //tuberkulose indeksoppfølging
+            searchParams.programUrl += '&filter=CYOl98TYOR5:IN:true';
+        }
         if(workingList.enrollmentCreatedPeriod){
             var enrollmentStartDate = moment().add(workingList.enrollmentCreatedPeriod.periodFrom, 'days').format("YYYY-MM-DD");
             var enrollmentEndDate = moment().add(workingList.enrollmentCreatedPeriod.periodTo, 'days').format("YYYY-MM-DD");

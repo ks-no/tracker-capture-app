@@ -37,6 +37,7 @@ export const INNREISE_OPPHOLDSSTED_ID = 'LYrjfgwVNVn';
 export const INNREISE_ARBEIDSGIVER_NAVN_ID = 'uncjwHvpOWP';
 export const INDEKS_SISTE_ISOLASJONSDATO = 'ouppljsSJ3J';
 export const NAERKONTAKT_SISTE_KARANTENEDATO = 'nXIm2GscOIL';
+export const TUBERKULOSE_PAAVIST = 'lF0akdgpr22';
 
 export const PROFIL_NASJONALT_FELLES_HJELPENUMMER = 'WBjHgYajTsb';
 export const PROFIL_FNR_INDEKS = 'fkUN6jLp7K4';
@@ -73,6 +74,9 @@ export const PROFIL_VAKSINE_3_TYPE_ID = 'zbLvlxnfL3i';
 export const PROFIL_VAKSINE_3_DATO_ID = 'TtvEl8Fjqjp';
 export const PROFIL_VAKSINE_4_TYPE_ID = 'g25zWgTxeyW';
 export const PROFIL_VAKSINE_4_DATO_ID = 'qP0ThbF052n';
+
+// TB attributter
+export const TB_PROFIL_TUBERKULOSE_PAAVIST = 'CYOl98TYOR5';
 
 // Arbeidslister
 export const INDEKS_ALLE_TILDELTE_OPPGAVER = 'xipDDlS3VGt';
