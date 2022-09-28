@@ -4818,7 +4818,7 @@ var externalLookupServices = angular.module('externalLookupServices', ['ngResour
 
         return {
             lookupFnr: function(fNr,kommuneNr,userId) {
-                var url = '../' + DHIS2URL + '/person/sok';
+                var url = '../smittevern/' + DHIS2URL + '/person/sok';
                 var promise = $http({
                     method: 'POST',
                     url: url,
