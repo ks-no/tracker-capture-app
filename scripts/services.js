@@ -2998,8 +2998,12 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             searchParams.programUrl += '&filter=FKviB19WReU:IN:true';
         }
         if(workingList.id === 'vd7fXsMSst5') { //tuberkulose indeksoppfølging
-            searchParams.programUrl += '&filter=CYOl98TYOR5:IN:true';
+            searchParams.programUrl += '&filter=CYOl98TYOR5:IN:true&filter=ufRgErC26rO:IN:false';
         }
+        if(workingList.id === 'PxoZrhTwBAi') { //tuberkulose latent
+            searchParams.programUrl += '&filter=ufRgErC26rO:IN:true';
+        }
+
         if(workingList.enrollmentCreatedPeriod){
             var enrollmentStartDate = moment().add(workingList.enrollmentCreatedPeriod.periodFrom, 'days').format("YYYY-MM-DD");
             var enrollmentEndDate = moment().add(workingList.enrollmentCreatedPeriod.periodTo, 'days').format("YYYY-MM-DD");

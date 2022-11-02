@@ -5,7 +5,9 @@ import { INNREISEINFORMASJON_PROGRAM_STAGE_ID} from "../../utils/constants";
 import {
     INDEKS_SISTE_ISOLASJONSDATO,
     NAERKONTAKT_SISTE_KARANTENEDATO,
-    TUBERKULOSE_PAAVIST
+    TUBERKULOSE_PAAVIST,
+    TUBERKULOSE_LATENT,
+    AS_TYPE_SYKDOM
 } from "../../utils/constants";
 
 var trackerCapture = angular.module('trackerCapture');
@@ -1812,6 +1814,12 @@ trackerCapture.controller('DataEntryController',
                 }
                 else if ( prStDe.id === TUBERKULOSE_PAAVIST ) {
                     $rootScope.$broadcast('tb-test_result-updated', {result: value});
+                }
+                else if ( prStDe.id === TUBERKULOSE_LATENT ) {
+                    $rootScope.$broadcast('tb-latent-updated', {result: value});
+                }
+                else if ( prStDe.id === AS_TYPE_SYKDOM ) {
+                    $rootScope.$broadcast('as-type_sykdom-updated', {result: value});
                 }
             });
 

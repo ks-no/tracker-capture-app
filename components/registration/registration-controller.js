@@ -16,7 +16,9 @@ import {
     PROFIL_SISTE_ISOLASJONSDATO,
     PROFIL_SISTE_KARANTENEDATO,
     PROFIL_NASJONALT_FELLES_HJELPENUMMER,
-    TB_PROFIL_TUBERKULOSE_PAAVIST
+    TB_PROFIL_TUBERKULOSE_PAAVIST,
+    TB_PROFIL_TUBERKULOSE_LATENT,
+    AS_PROFIL_TYPE_SYKDOM
 } from "../../utils/constants";
 import {makeHyphensInKodebeskrivelseNonBreaking} from "../../ks_patches/provesvar_utils";
 import {setCustomShowOnAttributes} from "../../ks_patches/hide_show_attributes";
@@ -1602,7 +1604,21 @@ trackerCapture.controller('RegistrationController',
         $scope.registerEntity(null);
     });
 
-    $scope.sendNotification = function() {
+    $scope.$on('tb-latent-updated', function(event, args) {
+        $scope.tei[TB_PROFIL_TUBERKULOSE_LATENT] = args.result;
+        $scope.selectedTei[TB_PROFIL_TUBERKULOSE_LATENT] = args.result;
+
+        $scope.registerEntity(null);
+    });
+
+    $scope.$on('as-type_sykdom-updated', function(event, args) {
+        $scope.tei[AS_PROFIL_TYPE_SYKDOM] = args.result;
+        $scope.selectedTei[AS_PROFIL_TYPE_SYKDOM] = args.result;
+
+        $scope.registerEntity(null);
+    });
+
+            $scope.sendNotification = function() {
 
         var messageText = FNrLookupService.getNotificationMessageTextSummary(CurrentSelection.currentSelection.orgUnit.code, $scope.selectedTei, $scope.allEventsSorted);
 
