@@ -4882,7 +4882,7 @@ var externalLookupServices = angular.module('externalLookupServices', ['ngResour
                 return promise;
             },
             lookupLabSvar: function(fNr, kommuneNr, userId) {
-                var url = '../' + DHIS2URL + '/provesvar/sok';
+                var url = '../smittevern/' + DHIS2URL + '/provesvar/sok';
                 var promise = $http({
                     method: 'POST',
                     url: url,
@@ -4914,7 +4914,7 @@ var externalLookupServices = angular.module('externalLookupServices', ['ngResour
                 return promise;
             },
             lookupVaccine: function(fNr, kommuneNr, userId) {
-                var url = '../' + DHIS2URL + '/vaksine/sok';
+                var url = '../smittevern/' + DHIS2URL + '/vaksine/sok';
                 var promise = $http({
                     method: 'POST',
                     url: url,
@@ -4949,7 +4949,7 @@ var externalLookupServices = angular.module('externalLookupServices', ['ngResour
                 return constructNotificationMessage(tei, allEvents, kommuneNr, true);
             },
             sendNotificationMessage: function(kommuneNr, userId, tei,allEvents) {
-                var url = '../' + DHIS2URL + '/klinikermelding';
+                var url = '../smittevern/' + DHIS2URL + '/klinikermelding';
                 var melding = constructNotificationMessage(tei,allEvents,kommuneNr);
                 var promise = $http({
                     method: 'POST',
@@ -4985,7 +4985,7 @@ var externalLookupServices = angular.module('externalLookupServices', ['ngResour
                 return promise;
             },
             getLabTestStatus: function(kommuneNr, userId) {
-              var url = '../' + DHIS2URL + '/innreise/synkroniser/status';
+              var url = '../smittevern/' + DHIS2URL + '/innreise/synkroniser/status';
               var promise = $http({
                   method: 'POST',
                   url: url,
@@ -4999,7 +4999,7 @@ var externalLookupServices = angular.module('externalLookupServices', ['ngResour
               return promise;
             },
             getMsisStatus: function(kommuneNr, userId) {
-                var url = '../' + DHIS2URL + '/provesvar/import/synkroniser/status';
+                var url = '../smittevern/' + DHIS2URL + '/provesvar/import/synkroniser/status';
                 var promise = $http({
                     method: 'POST',
                     url: url,
@@ -5013,7 +5013,7 @@ var externalLookupServices = angular.module('externalLookupServices', ['ngResour
                 return promise;
             },
             startLabTestSync: function(kommuneNr, userId) {
-                var url = '../' + DHIS2URL + '/innreise/synkroniser/start';
+                var url = '../smittevern/' + DHIS2URL + '/innreise/synkroniser/start';
                 var promise = $http({
                     method: 'POST',
                     url: url,
@@ -5027,7 +5027,7 @@ var externalLookupServices = angular.module('externalLookupServices', ['ngResour
                 return promise;
             },
             startMsisSync: function(kommuneNr, userId) {
-                var url = '../' + DHIS2URL + '/provesvar/import/synkroniser/start';
+                var url = '../smittevern/' + DHIS2URL + '/provesvar/import/synkroniser/start';
                 var promise = $http({
                     method: 'POST',
                     url: url,
