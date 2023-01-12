@@ -46,7 +46,7 @@ pipeline {
                 branch 'main_ks'
             }
             steps {
-                build job: 'KS/dhis2-setup/master', parameters: [booleanParam(name: 'isTriggeredFromTrackerCapture', value: true), string(name: 'tag_tracker_capture', value: env.GIT_SHA), string(name: 'branch_tracker_capture', value: env.GIT_BRANCH)], wait: false, propagate: false
+                build job: 'KS/fiks-smittevern-setup/main', parameters: [booleanParam(name: 'isTriggeredFromTrackerCapture', value: true), string(name: 'tag_tracker_capture', value: env.GIT_SHA), string(name: 'branch_tracker_capture', value: env.GIT_BRANCH)], wait: false, propagate: false
             }
        }
     }
