@@ -77,7 +77,6 @@ module.exports = {
         noParse: /node_modules\/leaflet-control-geocoder\/dist\/Control.Geocoder.js/,
     },
     plugins: [
-        new webpack.optimize.DedupePlugin(),
         new HTMLWebpackPlugin({
             template: './index.ejs',
             stylesheets: makeLinkTags([
