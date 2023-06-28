@@ -1445,6 +1445,10 @@ trackerCapture.controller('RegistrationController',
         }
     }
 
+    $scope.shouldShowFHISearch = function() {
+        return isFhiIntegrationsEnabled();
+    }
+
     $scope.shouldEnableLabTestAndVaccine = function() {
         return !isFhiIntegrationsEnabled() || ($scope.fNrOrEquivalent && $scope.fNrOrEquivalent.toString().length === 11);
     }
