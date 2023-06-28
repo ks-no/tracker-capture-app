@@ -1,6 +1,6 @@
 <div ng-if="widget !== 'PROFILE' && trackedEntityTypes.selected" class="section-label section-spacing vertical-spacing">
     {{'profile'| translate}}
-    <hr />
+    <hr ng-if="shouldShowFHISearch()" />
     <table ng-if="shouldShowFHISearch()">
         <tr>
             <td style="font-size: 9pt">
