@@ -12,7 +12,7 @@
         </tr>
         <tr>
             <td></td>
-            <td>
+            <td ng-if="shouldShowLabTestButton()">
                 <button ng-click="showLabTest()" type="button" class="btn btn-secondary"  ng-disabled="!shouldEnableLabTestAndVaccine()">Vis prøvesvar</button>
 
             </td>
