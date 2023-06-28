@@ -1444,7 +1444,7 @@ trackerCapture.controller('RegistrationController',
     }
 
     $scope.shouldEnableLabTestAndVaccine = function() {
-        return isFhiIntegrationsEnabled() && $scope.fNrOrEquivalent && $scope.fNrOrEquivalent.toString().length === 11;
+        return !isFhiIntegrationsEnabled() || ($scope.fNrOrEquivalent && $scope.fNrOrEquivalent.toString().length === 11);
     }
 
     $scope.shouldShowLabTestButton = function() {
