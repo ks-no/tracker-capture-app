@@ -1445,12 +1445,20 @@ trackerCapture.controller('RegistrationController',
         }
     }
 
+    $scope.shouldShowFHISearch = function() {
+        return isFhiIntegrationsEnabled();
+    }
+
     $scope.shouldEnableLabTestAndVaccine = function() {
-        return $scope.fNrOrEquivalent && $scope.fNrOrEquivalent.toString().length === 11;
+        return !isFhiIntegrationsEnabled() || ($scope.fNrOrEquivalent && $scope.fNrOrEquivalent.toString().length === 11);
+    }
+
+    $scope.shouldShowLabTestButton = function() {
+        return isFhiIntegrationsEnabled();
     }
 
     $scope.shouldShowVaccineButton = function() {
-        return $scope.selectedProgram.id === INDEKSERING_PROGRAM_ID || $scope.selectedProgram.id === NAERKONTAKT_PROGRAM_ID;
+        return isFhiIntegrationsEnabled();
     }
 
     $scope.getBestNumberForLabTestAndVaccine = function() {
@@ -1716,5 +1724,9 @@ trackerCapture.controller('RegistrationController',
 
     var showTetRegistrationButtons = function(){
         return $scope.trackedEntityTypes.selected && $scope.attributes && $scope.attributes.length > 3;
+    }
+
+    var isFhiIntegrationsEnabled = function() {
+        return $scope.selectedProgram.id === INDEKSERING_PROGRAM_ID || $scope.selectedProgram.id === NAERKONTAKT_PROGRAM_ID;
     }
 });

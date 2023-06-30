@@ -1,7 +1,7 @@
 <div ng-if="widget !== 'PROFILE' && trackedEntityTypes.selected" class="section-label section-spacing vertical-spacing">
     {{'profile'| translate}}
-    <hr />
-    <table>
+    <hr ng-if="shouldShowFHISearch()" />
+    <table ng-if="shouldShowFHISearch()">
         <tr>
             <td style="font-size: 9pt">
                 F‑nr/hjelpenummer
@@ -12,7 +12,7 @@
         </tr>
         <tr>
             <td></td>
-            <td>
+            <td ng-if="shouldShowLabTestButton()">
                 <button ng-click="showLabTest()" type="button" class="btn btn-secondary"  ng-disabled="!shouldEnableLabTestAndVaccine()">Vis prøvesvar</button>
 
             </td>
