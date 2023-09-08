@@ -1678,7 +1678,6 @@ trackerCapture.controller('RegistrationController',
                     {field:"kHf2v9hfkum", data:response.poststed},
                     //fødselsdatoformat DDMMYYYY
                     {field:"NI0QRzJvQ0k", data:response.fodselsdato ? DateUtils.formatFromApiToUser(response.fodselsdato.substring(4,8) + response.fodselsdato.substring(2,4) + response.fodselsdato.substring(0,2)): ''},
-                    {field:"Ym6yIceP4RO", data:response.epost},
                     //Kjønn: U/K/M
                     {field:"oindugucx72", data:response.kjonn == 'M' ? 'Mann' : response.kjonn == 'K' ? 'Kvinne' : response.kjonn == 'U' ? 'Ikke kjent' : '' },
                     {field:"fctSQp5nAYl", data:response.telefonnummer ? parseInt(response.telefonnummer.replace('+47','')) : null},
