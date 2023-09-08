@@ -28,7 +28,7 @@ import {
 } from "../../ks_patches/vaksine_utils";
 
 var trackerCapture = angular.module('trackerCapture');
-trackerCapture.controller('RegistrationController', 
+trackerCapture.controller('RegistrationController',
         function($rootScope,
                 $q,
                 $scope,
@@ -67,11 +67,11 @@ trackerCapture.controller('RegistrationController',
     var prefilledTet = null;
     $scope.today = DateUtils.getToday();
     $scope.trackedEntityForm = null;
-    $scope.customRegistrationForm = null;    
+    $scope.customRegistrationForm = null;
     $scope.selectedTei = {};
-    $scope.tei = {};    
+    $scope.tei = {};
     $scope.warningMessages = [];
-    $scope.hiddenFields = [];    
+    $scope.hiddenFields = [];
     $scope.assignedFields = [];
     $scope.errorMessages = {};
     $scope.attributeUniquenessError = {};
@@ -103,7 +103,7 @@ trackerCapture.controller('RegistrationController',
             angular.forEach(atts, function(att){
                 $scope.attributesById[att.id] = att;
             });
-            
+
             CurrentSelection.setAttributesById($scope.attributesById);
         });
     }
@@ -114,7 +114,7 @@ trackerCapture.controller('RegistrationController',
             CurrentSelection.setOptionGroupsById($scope.optionGroupsById);
         });
     }
-    
+
     //get ouLevels
     $scope.ouLevels = CurrentSelection.getOuLevels();
     if(!$scope.ouLevels || $scope.ouLevels.length < 1){
@@ -125,19 +125,19 @@ trackerCapture.controller('RegistrationController',
             });
         });
     }
-    
-    $scope.optionSets = CurrentSelection.getOptionSets();        
+
+    $scope.optionSets = CurrentSelection.getOptionSets();
     if(!$scope.optionSets){
         $scope.optionSets = [];
         MetaDataFactory.getAll('optionSets').then(function(optionSets){
-            angular.forEach(optionSets, function(optionSet){                        
+            angular.forEach(optionSets, function(optionSet){
                 $scope.optionSets[optionSet.id] = optionSet;
             });
             CurrentSelection.setOptionSets($scope.optionSets);
         });
     }
-    
-    
+
+
     $scope.isDisabled = function(attribute) {
         return attribute.generated || $scope.assignedFields[attribute.id] || $scope.editingDisabled;
     };
@@ -246,7 +246,7 @@ trackerCapture.controller('RegistrationController',
         loadTrackedEntityTypes().then(function(){
             setSearchConfig();
         });
-        
+
 
         $scope.model.minEnrollmentDate = "";
         $scope.model.maxEnrollmentDate =  ($scope.selectedProgram && $scope.selectedProgram.selectEnrollmentDatesInFuture) ? '' : "0";
@@ -280,7 +280,7 @@ trackerCapture.controller('RegistrationController',
             $scope.selectedTei = args.selectedTei || {};
             $scope.tei = angular.copy(args.selectedTei);
 
-            
+
         }
 
         if($scope.registrationMode === 'REGISTRATION'){
@@ -339,7 +339,7 @@ trackerCapture.controller('RegistrationController',
         $scope.customDataEntryForm = null;
         $scope.schedulingEnabled = true;
 
-        if( $scope.selectedProgram && $scope.selectedProgram.captureCoordinates && angular.isObject($scope.selectedEnrollment) ){                
+        if( $scope.selectedProgram && $scope.selectedProgram.captureCoordinates && angular.isObject($scope.selectedEnrollment) ){
             $scope.selectedEnrollment.coordinate = $scope.selectedEnrollment.coordinate ? $scope.selectedEnrollment.coordinate : {};
         }
 
@@ -358,9 +358,9 @@ trackerCapture.controller('RegistrationController',
                         $scope.trackedEntityForm.displayIncidentDate = $scope.selectedProgram.displayIncidentDate;
                         $scope.customRegistrationForm = CustomFormService.getForTrackedEntity($scope.trackedEntityForm, mode);
                     }
-    
-                    if ($scope.selectedProgram.programStages 
-                        && $scope.selectedProgram.programStages[0] 
+
+                    if ($scope.selectedProgram.programStages
+                        && $scope.selectedProgram.programStages[0]
                         && $scope.selectedProgram.useFirstStageDuringRegistration
                         && $scope.selectedProgram.programStages[0].access.data.write
                         && $scope.registrationMode === 'REGISTRATION') {
@@ -377,12 +377,12 @@ trackerCapture.controller('RegistrationController',
                         $scope.currentEvent.executionDateLabel = $scope.currentStage.executionDateLabel;
                         $rootScope.ruleeffects[$scope.currentEvent.event] = {};
                         $scope.selectedEnrollment.status = 'ACTIVE';
-    
-                        if( $scope.currentStage.captureCoordinates ){                            
+
+                        if( $scope.currentStage.captureCoordinates ){
                             $scope.currentEvent.coordinate = {};
                         }
-    
-                        angular.forEach($scope.currentStage.programStageDataElements, function (prStDe) {                            
+
+                        angular.forEach($scope.currentStage.programStageDataElements, function (prStDe) {
                             $scope.prStDes[prStDe.dataElement.id] = prStDe;
                             if (prStDe.allowProvidedElsewhere) {
                                 $scope.allowProvidedElsewhereExists[$scope.currentStage.id] = true;
@@ -402,7 +402,7 @@ trackerCapture.controller('RegistrationController',
                 angular.forEach(atts,function(att){
                     $scope.teTypeAttributesById[att.id] = att;
                 });
-                
+
                 if(!$scope.selectedProgram){
                     $scope.attributes = TEIGridService.generateGridColumns(atts, null, false).columns;
                 }
@@ -517,7 +517,7 @@ trackerCapture.controller('RegistrationController',
             var reg = regResponse.response.responseType ==='ImportSummaries' ? regResponse.response.importSummaries[0] : regResponse.response.responseType === 'ImportSummary' ? regResponse.response : {};
             if (reg.status === 'SUCCESS') {
                 $scope.tei.trackedEntityInstance = reg.reference;
-                
+
                 if ($scope.registrationMode === 'PROFILE') {
                     reloadProfileWidget();
                     $rootScope.$broadcast('teiupdated', {});
@@ -526,7 +526,7 @@ trackerCapture.controller('RegistrationController',
                         $scope.selectedEnrollment.orgUnit = $scope.tei.orgUnit;
                         EnrollmentService.update($scope.selectedEnrollment);
                         selection.load();
-                        $location.path('/').search({program: $scope.selectedProgram.id});                 
+                        $location.path('/').search({program: $scope.selectedProgram.id});
                     }
                 }
                 else {
@@ -605,7 +605,7 @@ trackerCapture.controller('RegistrationController',
         $rootScope.$broadcast('teienrolled', {});
     }
 
-    /* 
+    /*
     We decided to temporarily(?) remove the ongoing checks for duplicates and run them only when the form is submitted.
     This was due to the performance problems in Bangladesh. This is the event handler for the submit click.
     */
@@ -735,23 +735,23 @@ trackerCapture.controller('RegistrationController',
                 evs.all = [$scope.currentEvent];
                 evs.byStage[$scope.currentStage.id] = [$scope.currentEvent];
             }
-            
+
             TrackerRulesExecutionService.executeRules(
-                $scope.allProgramRules, 
-                eventExists ? $scope.currentEvent : 'registration', 
+                $scope.allProgramRules,
+                eventExists ? $scope.currentEvent : 'registration',
                 evs,
-                $scope.prStDes, 
+                $scope.prStDes,
                 $scope.attributesById,
-                $scope.selectedTei, 
-                $scope.selectedEnrollment, 
-                $scope.optionSets, 
+                $scope.selectedTei,
+                $scope.selectedEnrollment,
+                $scope.optionSets,
                 flag);
         }
     };
 
     //check if field is hidden
     $scope.isHidden = function (id) {
-        
+
         if($scope.currentEvent && $scope.hiddenFields[$scope.currentEvent.event] && $scope.hiddenFields[$scope.currentEvent.event][id]){
             return $scope.hiddenFields[$scope.currentEvent.event][id];
         }
@@ -763,7 +763,7 @@ trackerCapture.controller('RegistrationController',
         if ($scope.teiPreviousValues[field] !== tei[field] && $scope.attributeUniquenessError[field]) {
             $scope.attributeUniquenessError[field] = false;
         }
-        
+
         $scope.teiPreviousValues[field] = tei[field];
         return $scope.executeRules();
     };
@@ -776,7 +776,7 @@ trackerCapture.controller('RegistrationController',
                 if(searchGroups.default){
                     searchGroups.default[field] = tei[field];
                     promises.push(getMatchingTeisCountBySearchGroup(searchGroups.default, field));
-                } 
+                }
                 if(searchGroups.unique){
                     searchGroups.unique[field] = tei[field];
                     promises.push(getMatchingTeisCountBySearchGroup(searchGroups.unique, field));
@@ -803,7 +803,7 @@ trackerCapture.controller('RegistrationController',
                 }
                 $scope.matchingTeisCount = count;
                 $scope.matchingTeisSearchGroup = searchGroup;
-                
+
             });
         }else{
             promise = SearchGroupService.tetScopeSearchCount(searchGroup, $scope.trackedEntityTypes.selected, $scope.selectedOrgUnit).then(function(count){
@@ -900,13 +900,13 @@ trackerCapture.controller('RegistrationController',
                     if(groups){
                         if(groups.default && searchedGroups[groups.default.id]){
                             searchForExistingTeisBySearchGroup(groups.default);
-                            searchedGroups[groups.default.id] = true;  
+                            searchedGroups[groups.default.id] = true;
                         }
                         if(groups.unique && searchedGroups[groups.unique.id]){
                             searchForExistingTeisBySearchGroup(groups.unique);
-                            searchedGroups[groups.unique.id] = true;  
+                            searchedGroups[groups.unique.id] = true;
                         }
-                    }    
+                    }
                 });
             }
         }
@@ -1114,7 +1114,7 @@ trackerCapture.controller('RegistrationController',
                     $scope.registerEntity(res.destination, true);
                 }
             });
-        
+
     }
 
     $scope.getMatchingTeisLength = function(){
@@ -1277,7 +1277,7 @@ trackerCapture.controller('RegistrationController',
                 ModalService.showModal({}, modalOptions);
                 return;
             }
-    
+
             if (!DateUtils.verifyExpiryDate(date, $scope.selectedProgram.expiryPeriodType, $scope.selectedProgram.expiryDays, true)) {
                 $scope.currentEvent[field] = $scope.currentEventOriginal[field];
                 return;
@@ -1300,7 +1300,7 @@ trackerCapture.controller('RegistrationController',
         // Check if currentProgramStage blocks entry form when status is completed
         if($scope.currentStage && $scope.currentStage.blockEntryForm && $scope.currentEvent.status ==='COMPLETED') return false;
         //Check if tei is inactive
-        if($scope.selectedTei.inactive) return false;     
+        if($scope.selectedTei.inactive) return false;
         //Check if event is expired and user can edit expired stuff
         if(($scope.currentEvent.expired && !$scope.userAuthority.canEditExpiredStuff)) return false;
 
@@ -1308,8 +1308,8 @@ trackerCapture.controller('RegistrationController',
     }
 
     $scope.translateWithTETName = function(text, nameToLower){
-        var trackedEntityTypeName = $scope.selectedProgram ? 
-            $scope.selectedProgram.trackedEntityType.displayName : 
+        var trackedEntityTypeName = $scope.selectedProgram ?
+            $scope.selectedProgram.trackedEntityType.displayName :
             ($scope.trackedEntityTypes.selected ? $scope.trackedEntityTypes.selected.displayName : "tracked entity instance");
 
         if(nameToLower) trackedEntityTypeName = trackedEntityTypeName.toLowerCase();
@@ -1325,7 +1325,7 @@ trackerCapture.controller('RegistrationController',
         }
         if(length === 1){
             return $translate.instant(singleText);
-        } 
+        }
         var translated = $translate.instant(multipleText);
         return translated.replace("{count}", length.toString());
     }
@@ -1353,13 +1353,13 @@ trackerCapture.controller('RegistrationController',
         if(!$scope.hasTeiWrite()) return true;
         return false;
     }
-    
+
 
     $scope.dataElementEditable = function(prStDe){
         if($scope.eventEditable()){
             if($scope.assignedFields && $scope.assignedFields[$scope.currentEvent.event] && $scope.assignedFields[$scope.currentEvent.event][prStDe.dataElement.id]){
                 return false;
-            } 
+            }
             return true;
         }
         return false;
@@ -1373,12 +1373,12 @@ trackerCapture.controller('RegistrationController',
     }
 
     $scope.deleteFile = function(tei, attribute){
-        
+
         if( !attribute ){
             NotificationService.showNotifcationDialog($translate.instant("error"), $translate.instant("missing_file_identifier"));
             return;
         }
-        
+
         var modalOptions = {
             closeButtonText: 'cancel',
             actionButtonText: 'remove',
@@ -1386,19 +1386,19 @@ trackerCapture.controller('RegistrationController',
             bodyText: 'are_you_sure_to_remove'
         };
 
-        ModalService.showModal({}, modalOptions).then(function(result){            
+        ModalService.showModal({}, modalOptions).then(function(result){
             $scope.fileNames[attribute] = "";
             $scope.fileNames["undefined"][attribute] = "";
             tei[attribute] = "";
         });
     };
 
-    $scope.downloadFile = function(tei, attributeId) {      
+    $scope.downloadFile = function(tei, attributeId) {
         if( !tei || !tei.trackedEntityInstance || !attributeId){
             NotificationService.showNotifcationDialog($translate.instant("error"), $translate.instant("missing_file_identifier"));
             return;
         }
-        
+
         $window.open('../api/trackedEntityInstances/' + tei.trackedEntityInstance + '/' + attributeId + '/image', '_blank', '');
     };
 
@@ -1646,18 +1646,18 @@ trackerCapture.controller('RegistrationController',
             finally {}
 
             FNrLookupService.sendNotificationMessage(CurrentSelection.currentSelection.orgUnit.code, userId, $scope.selectedTei, $scope.allEventsSorted).then(function(result){
-                
+
                 if(result) {
                     //Store value indicating that notification is sent.
                     $scope.selectedTei.C225m3EOPRo = 'true';
                     $scope.registerEntity(null);
-                    
+
                     var note = "Klinikermelding innsendt til MSIS med følgende verdier: " + messageText.join(', ');
-                    $rootScope.$broadcast('notificationSuccessful', note); 
+                    $rootScope.$broadcast('notificationSuccessful', note);
                 }
             });
         });
-        
+
     }
 
     $scope.registryLookup = function() {
@@ -1673,13 +1673,16 @@ trackerCapture.controller('RegistrationController',
                 var fieldMappings = [
                     {field:"sB1IHYu2xQT", data:response.fornavn},
                     {field:"ENRjVGxVL6l", data:response.etternavn},
-                    {field:"Xhdn49gUd52", data:response.adresse ? response.adresse + ', ' + response.postnummer + ' ' + response.poststed: null},
+                    {field:"Xhdn49gUd52", data:response.adresse},
+                    {field:"e3LkMmeQ0jY", data:response.postnummer},
+                    {field:"kHf2v9hfkum", data:response.poststed},
                     //fødselsdatoformat DDMMYYYY
                     {field:"NI0QRzJvQ0k", data:response.fodselsdato ? DateUtils.formatFromApiToUser(response.fodselsdato.substring(4,8) + response.fodselsdato.substring(2,4) + response.fodselsdato.substring(0,2)): ''},
                     {field:"Ym6yIceP4RO", data:response.epost},
                     //Kjønn: U/K/M
                     {field:"oindugucx72", data:response.kjonn == 'M' ? 'Mann' : response.kjonn == 'K' ? 'Kvinne' : response.kjonn == 'U' ? 'Ikke kjent' : '' },
-                    {field:"fctSQp5nAYl", data:response.telefonnummer ? parseInt(response.telefonnummer.replace('+47','')) : null}
+                    {field:"fctSQp5nAYl", data:response.telefonnummer ? parseInt(response.telefonnummer.replace('+47','')) : null},
+                    {field:"Ym6yIceP4RO", data:response.epost}
                 ];
 
                 var errorMessage = "";
@@ -1697,7 +1700,7 @@ trackerCapture.controller('RegistrationController',
                         headerText: 'Felter overskrives',
                         bodyText: 'Følgende verdier var allerede fylt ut, men kan erstattes med nye fra Folkeregisteret. ' + errorMessage
                     };
-        
+
                     ModalService.showModal({}, modalOptions).then(function (result) {
                         updateValues(fieldMappings, true);
                     });
