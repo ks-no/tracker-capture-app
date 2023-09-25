@@ -30,7 +30,7 @@ var hasAllAccess = false;
 dhis2.tc.store = null;
 dhis2.tc.metaDataCached = dhis2.tc.metaDataCached || false;
 dhis2.tc.memoryOnly = $('html').hasClass('ie7') || $('html').hasClass('ie8');
-var adapters = [];    
+var adapters = [];
 if( dhis2.tc.memoryOnly ) {
     adapters = [ dhis2.storage.InMemoryAdapter ];
 } else {
@@ -57,9 +57,9 @@ dhis2.tc.store = new dhis2.storage.Store({
 /**
  * Page init. The order of events is:
  *
- * 1. Load ouwt 
- * 2. Load meta-data (and notify ouwt) 
- * 
+ * 1. Load ouwt
+ * 2. Load meta-data (and notify ouwt)
+ *
  */
 
 
@@ -152,8 +152,8 @@ function downloadMetaData()
     promise = promise.then( getConstants );
     promise = promise.then( getOrgUnits);
     promise = promise.then( getOrgUnitLevels );
-    promise = promise.then( getRelationships );       
-    promise = promise.then( getTrackedEntityTypesWithAccess );    
+    promise = promise.then( getRelationships );
+    promise = promise.then( getTrackedEntityTypesWithAccess );
     promise = promise.then( getMetaPrograms );
     promise = promise.then( filterMissingPrograms );
     promise = promise.then( getPrograms );
@@ -169,7 +169,7 @@ function downloadMetaData()
         //Enable ou selection after meta-data has downloaded
         $( "#orgUnitTree" ).removeClass( "disable-clicks" );
         dhis2.tc.metaDataCached = true;
-        console.log( 'Finished loading meta-data' );        
+        console.log( 'Finished loading meta-data' );
         selection.responseReceived();
         def2.resolve();
     });
@@ -183,74 +183,74 @@ function downloadMetaData()
 }
 
 function getSystemSetting()
-{   
+{
     if(localStorage['SYSTEM_SETTING']){
-       return; 
+       return;
     }
-    
+
     return dhis2.tracker.getTrackerObject(null, 'SYSTEM_SETTING', DHIS2URL + '/systemSettings', 'key=keyGoogleMapsApiKey&key=keyCalendar&key=keyDateFormat', 'localStorage', dhis2.tc.store);
 }
 
 function getUserSetting()
-{   
-    var SessionStorageService = angular.element('body').injector().get('SessionStorageService');    
+{
+    var SessionStorageService = angular.element('body').injector().get('SessionStorageService');
     if( SessionStorageService.get('USER_SETTING') ){
-       return; 
+       return;
     }
-    
+
     return dhis2.tracker.getTrackerObject(null, 'USER_SETTING', DHIS2URL + '/userSettings.json', 'key=keyDbLocale&key=keyUiLocale&key=keyStyle', 'sessionStorage', dhis2.tc.store);
 }
 
 function getUserProfile()
 {
-    var SessionStorageService = angular.element('body').injector().get('SessionStorageService');    
+    var SessionStorageService = angular.element('body').injector().get('SessionStorageService');
     if( SessionStorageService.get('USER_PROFILE') ){
-       return; 
+       return;
     }
-    
+
     return dhis2.tracker.getTrackerObject(null, 'USER_PROFILE', DHIS2URL + '/me.json', 'fields=id,displayName,userCredentials[username,userRoles[id,programs,authorities]],organisationUnits[id,displayName,programs[id],level,code,path,children[id,displayName,programs[id],level,children[id]]],dataViewOrganisationUnits[id,displayName,programs[id],level,path,code,children[id,displayName,programs[id],level,children[id]]],teiSearchOrganisationUnits[id,displayName,programs[id],level,path,code,children[id,displayName,programs[id],level,children[id]]]', 'sessionStorage', dhis2.tc.store);
 }
 
 function getConstants()
 {
-    dhis2.tc.store.getKeys( 'constants').done(function(res){        
+    dhis2.tc.store.getKeys( 'constants').done(function(res){
         if(res.length > 0){
             return;
-        }        
-        return dhis2.tracker.getTrackerObjects('constants', 'constants', DHIS2URL + '/constants.json', 'paging=false&fields=id,displayName,value', 'idb', dhis2.tc.store);        
-    });    
+        }
+        return dhis2.tracker.getTrackerObjects('constants', 'constants', DHIS2URL + '/constants.json', 'paging=false&fields=id,displayName,value', 'idb', dhis2.tc.store);
+    });
 }
 
 function getOrgUnits()
 {
-    dhis2.tc.store.getKeys( 'organisationUnits').done(function(res){        
+    dhis2.tc.store.getKeys( 'organisationUnits').done(function(res){
         if(res.length > 0){
             return;
         }
-        return dhis2.tracker.getTrackerObjects('organisationUnits', 'organisationUnits', DHIS2URL + '/organisationUnits.json', 'paging=false&fields=id,displayName,path', 'idb', dhis2.tc.store);        
-    });    
+        return dhis2.tracker.getTrackerObjects('organisationUnits', 'organisationUnits', DHIS2URL + '/organisationUnits.json', 'paging=false&fields=id,displayName,path', 'idb', dhis2.tc.store);
+    });
 }
 
 function getOrgUnitLevels()
 {
-    dhis2.tc.store.getKeys( 'ouLevels').done(function(res){        
+    dhis2.tc.store.getKeys( 'ouLevels').done(function(res){
         if(res.length > 0){
             return;
-        }        
+        }
         return dhis2.tracker.getTrackerObjects('ouLevels', 'organisationUnitLevels', DHIS2URL + '/organisationUnitLevels.json', 'filter=level:gt:1&fields=id,displayName,level&paging=false', 'idb', dhis2.tc.store);
-    }); 
+    });
 }
 
 function getRelationships()
-{    
-    dhis2.tc.store.getKeys( 'relationshipTypes').done(function(res){        
+{
+    dhis2.tc.store.getKeys( 'relationshipTypes').done(function(res){
         return dhis2.tracker.getTrackerObjects('relationshipTypes', 'relationshipTypes', DHIS2URL + '/relationshipTypes.json', 'paging=false&fields=id,code,displayName,bidirectional,fromToName,toFromName,fromConstraint[*],toConstraint[*],access[*]', 'idb', dhis2.tc.store);
-    });    
+    });
 }
 
 function getMetaPrograms()
-{   
-    console.log('in programs..'); 
+{
+    console.log('in programs..');
     return dhis2.tracker.getTrackerObjects('programs', 'programs', DHIS2URL + '/programs.json', 'filter=programType:eq:WITH_REGISTRATION&paging=false&fields=id,version,programTrackedEntityAttributes[trackedEntityAttribute[id,optionSet[id,version]]],programStages[id,programStageDataElements[dataElement[id,optionSet[id,version],style]]]', 'temp', dhis2.tc.store);
 }
 
@@ -259,7 +259,7 @@ function filterMissingPrograms( programs )
     if( !programs ){
         return;
     }
-    
+
     var mainDef = $.Deferred();
     var mainPromise = mainDef.promise();
 
@@ -270,18 +270,18 @@ function filterMissingPrograms( programs )
     var build = builder.promise();
 
     var ids = [];
-    _.each( _.values( programs ), function ( program ) {        
+    _.each( _.values( programs ), function ( program ) {
         build = build.then(function() {
             var d = $.Deferred();
             var p = d.promise();
             dhis2.tc.store.get('programs', program.id).done(function(obj) {
-                if(!obj || obj.version !== program.version) {                        
+                if(!obj || obj.version !== program.version) {
                     ids.push( program.id );
                 }
                 d.resolve();
             });
             return p;
-        });  
+        });
     });
 
     build.done(function() {
@@ -303,9 +303,9 @@ function getPrograms( programs, ids, accessIds )
     if( !ids || !ids.length || ids.length < 1){
         return;
     }
-    
+
     var batches = dhis2.tracker.chunk( ids, programBatchSize );
-    
+
     var mainDef = $.Deferred();
     var mainPromise = mainDef.promise();
 
@@ -314,8 +314,8 @@ function getPrograms( programs, ids, accessIds )
 
     var builder = $.Deferred();
     var build = builder.promise();
-    
-    _.each( _.values( batches ), function ( batch ) {        
+
+    _.each( _.values( batches ), function ( batch ) {
         promise = getBatchPrograms( programs, batch );
         promise = promise.then( getMetaProgramIndicators );
         promise = promise.then( getProgramIndicators );
@@ -327,25 +327,25 @@ function getPrograms( programs, ids, accessIds )
 
     build.done(function() {
         def.resolve();
-        promise = promise.done( function () {                      
+        promise = promise.done( function () {
             mainDef.resolve( programs, ids, accessIds );
-        } );        
-        
+        } );
+
     }).fail(function(){
         mainDef.resolve( null, null,null );
     });
 
     builder.resolve();
 
-    return mainPromise;    
+    return mainPromise;
 }
 
 function getBatchPrograms( programs, batch )
-{   
+{
     var ids = '[' + batch.toString() + ']';
-    
+
     var def = $.Deferred();
-    
+
     $.ajax( {
         url: DHIS2URL + '/programs.json',
         type: 'GET',
@@ -361,19 +361,34 @@ function getBatchPrograms( programs, batch )
                     });
                     program.organisationUnits = ou;
                 }
-                
+
                 if( program.programStages ){
                     program.programStages = _.sortBy( program.programStages, 'sortOrder' );
+                    _.each( program.programStages, function ( prSt ) {
+                        if ( prSt.programStageDataElements ) {
+                            _.each( prSt.programStageDataElements, function ( prStDe ) {
+                                if ( prStDe.renderType && prStDe.renderType.DESKTOP ) {
+                                    const renderType = prStDe.renderType.DESKTOP.type;
+                                    if (renderType === 'VERTICAL_RADIOBUTTONS' || renderType === 'HORIZONTAL_RADIOBUTTONS') {
+                                        prStDe.renderOptionsAsRadio = true;
+                                        prStDe.renderRadioHorizontally = renderType === 'HORIZONTAL_RADIOBUTTONS';
+                                    }
+                                } else if ( prStDe.renderOptionsAsRadio ) {
+                                    prStDe.renderRadioHorizontally = false;
+                                }
+                            });
+                        }
+                    });
                 }
 
                 if( program.categoryCombo && program.categoryCombo.categories ){
-                    _.each( _.values( program.categoryCombo.categories ), function ( ca ) {                            
+                    _.each( _.values( program.categoryCombo.categories ), function ( ca ) {
                         if( ca.categoryOptions ){
                             _.each( _.values( ca.categoryOptions ), function ( co ) {
                                 var mappedOrganisationUnits = [];
-                                if( co.organisationUnits && co.organisationUnits.length > 0 ){                                        
+                                if( co.organisationUnits && co.organisationUnits.length > 0 ){
                                     mappedOrganisationUnits = $.map(co.organisationUnits, function(ou){return ou.id;});
-                                }                                
+                                }
                                 co.organisationUnits = mappedOrganisationUnits;
                             });
                         }
@@ -384,7 +399,7 @@ function getBatchPrograms( programs, batch )
                 dhis2.tc.store.set( 'programs', program );
             });
         }
-        
+
         def.resolve( programs, batch );
     });
 
@@ -394,20 +409,20 @@ function getBatchPrograms( programs, batch )
 function getMetaTrackeEntityAttributes( programs )
 {
     var def = $.Deferred();
-    
+
     $.ajax({
         url: DHIS2URL + '/trackedEntityAttributes.json',
         type: 'GET',
         data:'paging=false&filter=displayInListNoProgram:eq:true&fields=id,optionSet[id,version]'
-    }).done( function(response) {          
+    }).done( function(response) {
         var trackedEntityAttributes = [];
-        _.each( _.values( response.trackedEntityAttributes ), function ( trackedEntityAttribute ) {             
-            if( trackedEntityAttribute && trackedEntityAttribute.id ) {            
+        _.each( _.values( response.trackedEntityAttributes ), function ( trackedEntityAttribute ) {
+            if( trackedEntityAttribute && trackedEntityAttribute.id ) {
                 trackedEntityAttributes.push( trackedEntityAttribute );
-            }            
+            }
         });
-        
-        _.each( _.values( programs ), function ( program ) {        
+
+        _.each( _.values( programs ), function ( program ) {
             if(program.programTrackedEntityAttributes){
                 _.each(_.values(program.programTrackedEntityAttributes), function(teAttribute){
                     if( trackedEntityAttributes.indexOf(teAttribute.id) === -1 ){
@@ -416,13 +431,13 @@ function getMetaTrackeEntityAttributes( programs )
                 });
             }
         });
-        
+
         def.resolve( programs, trackedEntityAttributes );
-        
+
     }).fail(function(){
         def.resolve( null );
     });
-    
+
     return def.promise();
 }
 
@@ -431,7 +446,7 @@ function filterMissingTrackedEntityAttributes( programs, trackedEntityAttributes
     if( !trackedEntityAttributes ){
         return;
     }
-    
+
     var mainDef = $.Deferred();
     var mainPromise = mainDef.promise();
 
@@ -439,9 +454,9 @@ function filterMissingTrackedEntityAttributes( programs, trackedEntityAttributes
     var promise = def.promise();
 
     var builder = $.Deferred();
-    var build = builder.promise();        
+    var build = builder.promise();
 
-    _.each(_.values(trackedEntityAttributes), function(teAttribute){        
+    _.each(_.values(trackedEntityAttributes), function(teAttribute){
         build = build.then(function() {
             var d = $.Deferred();
             var p = d.promise();
@@ -452,7 +467,7 @@ function filterMissingTrackedEntityAttributes( programs, trackedEntityAttributes
                 d.resolve();
             });
             return p;
-        });            
+        });
     });
 
     build.done(function() {
@@ -466,7 +481,7 @@ function filterMissingTrackedEntityAttributes( programs, trackedEntityAttributes
 
     builder.resolve();
 
-    return mainPromise;    
+    return mainPromise;
 }
 
 function getTrackedEntityAttributes( programs, trackedEntityAttributes)
@@ -479,7 +494,7 @@ function getOptionSetsForAttributes( data )
     if( !data || !data.trackedEntityAttributes ){
         return;
     }
-    
+
     var mainDef = $.Deferred();
     var mainPromise = mainDef.promise();
 
@@ -489,13 +504,13 @@ function getOptionSetsForAttributes( data )
     var builder = $.Deferred();
     var build = builder.promise();
 
-    _.each(_.values( data.trackedEntityAttributes), function( teAttribute) {           
+    _.each(_.values( data.trackedEntityAttributes), function( teAttribute) {
         if( teAttribute.optionSet && teAttribute.optionSet.id ){
             build = build.then(function() {
                 var d = $.Deferred();
                 var p = d.promise();
-                dhis2.tc.store.get('optionSets', teAttribute.optionSet.id).done(function(obj) {                            
-                    if((!obj || obj.version !== teAttribute.optionSet.version) && optionSetIds.indexOf(teAttribute.optionSet.id) === -1) {                                
+                dhis2.tc.store.get('optionSets', teAttribute.optionSet.id).done(function(obj) {
+                    if((!obj || obj.version !== teAttribute.optionSet.version) && optionSetIds.indexOf(teAttribute.optionSet.id) === -1) {
                         optionSetIds.push(teAttribute.optionSet.id);
                     }
                     d.resolve();
@@ -503,7 +518,7 @@ function getOptionSetsForAttributes( data )
 
                 return p;
             });
-        }            
+        }
     });
 
     build.done(function() {
@@ -517,15 +532,15 @@ function getOptionSetsForAttributes( data )
 
     builder.resolve();
 
-    return mainPromise;    
+    return mainPromise;
 }
 
 function getOptionSetsForDataElements( data )
-{   
+{
     if( !data ||!data.programs ){
         return;
     }
-   
+
     var mainDef = $.Deferred();
     var mainPromise = mainDef.promise();
 
@@ -534,19 +549,19 @@ function getOptionSetsForDataElements( data )
 
     var builder = $.Deferred();
     var build = builder.promise();
-    
+
     _.each( _.values( data.programs ), function ( program ) {
         if(program.programStages){
             _.each(_.values( program.programStages), function( programStage) {
                 if(programStage.programStageDataElements){
                     _.each(_.values( programStage.programStageDataElements), function(prStDe){
-                        if( prStDe.dataElement ){                                    
+                        if( prStDe.dataElement ){
                             if( prStDe.dataElement.optionSet && prStDe.dataElement.optionSet.id ){
                                 build = build.then(function() {
                                     var d = $.Deferred();
                                     var p = d.promise();
-                                    dhis2.tc.store.get('optionSets', prStDe.dataElement.optionSet.id).done(function(obj) {                                    
-                                        if( (!obj || obj.version !== prStDe.dataElement.optionSet.version) && optionSetIds.indexOf(prStDe.dataElement.optionSet.id) === -1) {                                
+                                    dhis2.tc.store.get('optionSets', prStDe.dataElement.optionSet.id).done(function(obj) {
+                                        if( (!obj || obj.version !== prStDe.dataElement.optionSet.version) && optionSetIds.indexOf(prStDe.dataElement.optionSet.id) === -1) {
                                             optionSetIds.push( prStDe.dataElement.optionSet.id );
                                         }
                                         d.resolve();
@@ -560,7 +575,7 @@ function getOptionSetsForDataElements( data )
             });
         }
     });
-    
+
     build.done(function() {
         def.resolve();
         promise = promise.done( function () {
@@ -569,14 +584,14 @@ function getOptionSetsForDataElements( data )
     }).fail(function(){
         mainDef.resolve();
     });
-    
+
     builder.resolve();
 
-    return mainPromise;    
+    return mainPromise;
 }
 
 function getOptionSets()
-{   
+{
     return dhis2.tracker.getBatches( optionSetIds, batchSize, null, 'optionSets', 'optionSets', DHIS2URL + '/optionSets.json', 'paging=false&fields=id,displayName,version,options[id,displayName,code]', 'idb', dhis2.tc.store );
 }
 
@@ -585,7 +600,7 @@ function getObjectIds(data){
 }
 
 function getMetaProgramIndicators( programs, programIds )
-{   
+{
     programs.programIds = programIds;
     return dhis2.tracker.getTrackerMetaObjects(programs, 'programIndicators', DHIS2URL + '/programIndicators.json', 'paging=false&fields=id&filter=program.id:in:');
 }
@@ -597,7 +612,7 @@ function getProgramIndicators(data)
 }
 
 function getMetaProgramRules( programs )
-{ 
+{
     return dhis2.tracker.getTrackerMetaObjects(programs, 'programRules', DHIS2URL + '/programRules.json', 'paging=false&fields=id&filter=program.id:in:');
 }
 
@@ -608,7 +623,7 @@ function getProgramRules( data )
 }
 
 function getMetaProgramRuleVariables( programs )
-{    
+{
     return dhis2.tracker.getTrackerMetaObjects(programs, 'programRuleVariables', DHIS2URL + '/programRuleVariables.json', 'paging=false&fields=id&filter=program.id:in:');
 }
 
@@ -622,7 +637,7 @@ function getProgramRuleVariables( data )
 
 function setHasAllAccess(){
     var def = $.Deferred();
-    var SessionStorageService = angular.element('body').injector().get('SessionStorageService');    
+    var SessionStorageService = angular.element('body').injector().get('SessionStorageService');
     var userProfile = SessionStorageService.get('USER_PROFILE');
     if(userProfile && userProfile.authorities){
         var r = $.grep(userProfile.authorities, function(a){ return a === 'ALL'});
@@ -657,7 +672,7 @@ function getProgramAccess(){
             _.each(_.values(programStageAccesses), function(programStageAccess){
                 if(programStageAccess.program && programAccessesById[programStageAccess.program.id]){
                     if(hasAllAccess) programStageAccess.access.data = {read : true, write: true};
-                    programAccessesById[programStageAccess.program.id].programStages.push(programStageAccess);              
+                    programAccessesById[programStageAccess.program.id].programStages.push(programStageAccess);
                 }
 
             });

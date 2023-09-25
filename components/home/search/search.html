@@ -1,7 +1,7 @@
 <div ng-controller="SearchController" class="col-lg-6 col-md-8 col-sm-10">
     <div ng-if="base.selectedProgram">
-        <h2>{{'search_for'| translate}} {{trackedEntityTypes.selected.displayName.toLowerCase()}} 
-            <img class="icon-program" 
+        <h2>{{'search_for'| translate}} {{trackedEntityTypes.selected.displayName.toLowerCase()}}
+            <img class="icon-program"
                  ng-style="{'background-color': (trackedEntityTypes.selected.style.color ? trackedEntityTypes.selected.style.color : '#E0E0E0')}"
                  ng-src="{{APIURL}}/icons/{{trackedEntityTypes.selected.style.icon ? trackedEntityTypes.selected.style.icon : 'clinical_fe_outline'}}/icon.svg"></i>
         </h2>
@@ -44,11 +44,11 @@
                     </ui-select>
                 </span>
                 <span ng-if="attribute.renderOptionsAsRadio && base.optionSets[attribute.optionSet.id].options.length < 7">
-                    <d2-radio id="attribute.id" 
-                            d2-name="foo" 
+                    <d2-radio id="attribute.id"
+                            d2-name="foo"
                             d2-object="searchGroup"
                             d2-options="base.optionSets[attribute.optionSet.id].options"
-                            >
+                            d2-render-horizontally="attribute.renderRadioHorizontally">
                     </d2-radio>
                 </span>
             </div>
@@ -133,7 +133,7 @@
                 </span>
 
                 <span ng-switch-default>
-                    <input type="text" class="form-control" ng-model="searchGroup[attribute.id].value" /> 
+                    <input type="text" class="form-control" ng-model="searchGroup[attribute.id].value" />
                 </span>
             </div>
         </div>
