@@ -11,19 +11,20 @@
                                 d2-option-filter="optionVisibility[currentEvent.event]"
                                 d2-all-options="optionSets[prStDe.dataElement.optionSet.id].options"
                                 d2-use-notification="true"
-                                d2-element="currentElement">
+                                d2-element="currentElement"
+                                d2-render-horizontally="prStDe.renderRadioHorizontally">
                 </d2-option-list>
             </div>
             <div ng-if="prStDe.renderOptionsAsRadio && optionSets[prStDe.dataElement.optionSet.id].options.length < 7">
-                <d2-radio id="prStDe.dataElement.id" 
-                    d2-name="foo" 
+                <d2-radio id="prStDe.dataElement.id"
+                    d2-name="foo"
                     d2-value-saved="currentElement.saved && currentElement.id === prStDe.dataElement.id"
                     d2-object="currentEvent"
                     d2-option-filter="optionVisibility[currentEvent.event]"
                     d2-options="optionSets[prStDe.dataElement.optionSet.id].options"
                     d2-required="prStDe.compulsory || mandatoryFields[currentEvent.event][prStDe.dataElement.id]"
                     d2-disabled="!dataElementEditable(prStDe)"
-                    d2-function="saveDataValueForRadio(prStDe, currentEvent, value)">                                                    
+                    d2-function="saveDataValueForRadio(prStDe, currentEvent, value)">
                 </d2-radio>
             </div>
         </div>
@@ -141,12 +142,12 @@
             </div>
         </div>
         <div ng-switch-when="AGE">
-            <d2-age id="{{prStDe.dataElement.id}}" 
+            <d2-age id="{{prStDe.dataElement.id}}"
                     d2-age-saved="currentElement.saved && currentElement.id === prStDe.dataElement.id"
-                    d2-object="currentEvent" 
+                    d2-object="currentEvent"
                     d2-required="prStDe.compulsory || mandatoryFields[currentEvent.event][prStDe.dataElement.id]"
                     d2-disabled="selectedEnrollment.status !== 'ACTIVE' || currentEvent.editingNotAllowed || assignedFields[currentEvent.event][prStDe.dataElement.id]"
-                    d2-function="saveDatavalue(prStDe, innerForm.foo)">                                                    
+                    d2-function="saveDatavalue(prStDe, innerForm.foo)">
             </d2-age>
         </div>
         <div ng-switch-when="PHONE_NUMBER">
@@ -283,7 +284,7 @@
                           datetime-use-notification="true"
                           datetime-disabled="!dataElementEditable(prStDe)"
                           datetime-outerform="outerDataEntryForm">
-            </d2-date-time>            
+            </d2-date-time>
         </div>
         <div ng-switch-when="TRUE_ONLY">
             <div class="hideInPrint">
@@ -356,13 +357,13 @@
             </div>
         </div>
         <div ng-switch-when="COORDINATE">
-            <d2-map id="{{prStDe.dataElement.id}}"                    
+            <d2-map id="{{prStDe.dataElement.id}}"
                     d2-lat-saved="currentElement.saved && currentElement.id === prStDe.dataElement.id"
                     d2-lng-saved="currentElement.saved && currentElement.id === prStDe.dataElement.id"
-                    d2-object="currentEvent" 
+                    d2-object="currentEvent"
                     d2-required="prStDe.compulsory || mandatoryFields[currentEvent.event][prStDe.dataElement.id]"
                     d2-disabled="!dataElementEditable(prStDe)"
-                    d2-function="saveDatavalue(arg1)" 
+                    d2-function="saveDatavalue(arg1)"
                     d2-coordinate-format="'TEXT'"
                     d2-function-param-text="prStDe"
                     d2-function-param-coordinate="LATLNG">
@@ -381,7 +382,7 @@
             </d2-org-unit-tree>
         </div>
         <span ng-switch-when="EMAIL">
-            <input 
+            <input
                 type="email"
                 autocomplete="off"
                 name="foo"
@@ -420,7 +421,7 @@
         <!-- URL error message is temporarily placed here. Should be placed with the other error messages in the core. -->
         <span ng-message="urlValidator">{{'url_error' | translate}}</span>
         <span ng-message="timeValidator">{{'time_error' | translate}}</span>
-    </div>  
+    </div>
     <div class="alert alert-warning alert-dismissible" role="alert" ng-if="warningMessages[currentEvent.event][prStDe.dataElement.id]">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         {{warningMessages[currentEvent.event][prStDe.dataElement.id]}}

@@ -17,7 +17,7 @@ var d2Directives = angular.module('d2Directives', [])
             window.onhashchange = function(a,b,c,d){
                 selection.load();
             }
-            
+
             $("#orgUnitTree").on("ouwtLoaded", function(event, ids, names){
                 console.log("on outree");
             });
@@ -105,7 +105,7 @@ var d2Directives = angular.module('d2Directives', [])
         element.on('change', function (event) {
             hasChanged = true;
         });
-        
+
         element.on('blur', function (event) {
             if (hasChanged) {
                 scope.$apply(function () {
@@ -117,7 +117,7 @@ var d2Directives = angular.module('d2Directives', [])
     };
 })
 
-.directive('d2OnEnterBlur', function() {  
+.directive('d2OnEnterBlur', function() {
     return function(scope, element, attrs) {
         element.bind("keydown keypress", function(event) {
             if(event.which === 13) {
@@ -281,7 +281,7 @@ var d2Directives = angular.module('d2Directives', [])
         restrict: 'E',
         controller: function ($scope, Paginator) {
             $scope.paginator = Paginator;
-            
+
             $scope.pageSizeEdit = $scope.pager && $scope.pager.pageSize;
             $scope.pageEdit = $scope.pager && $scope.pager.page;
 
@@ -618,13 +618,13 @@ var d2Directives = angular.module('d2Directives', [])
             d2MaxOptionSize: '=',
             d2UseNotification: '=',
             d2Element: '='
-            
+
         },
         link: function (scope, element, attrs) {
 
         },
         controller: function($scope, UsersService, OrgUnitFactory) {
-            $scope.allUsers = [];        
+            $scope.allUsers = [];
             $scope.temp = UsersService.getByQuery('').then(function(users){
                 $scope.allUsers = users;
             });
@@ -635,18 +635,18 @@ var d2Directives = angular.module('d2Directives', [])
 
             $scope.getInputNotifcationClass = function(id) {
 				var event = $scope.d2Model;
-				
+
 				if($scope.d2Element && $scope.d2Element.id === id && $scope.d2Element.event && $scope.d2Element.event === event.event) {
 					if($scope.d2Element.pending) {
 						return 'input-pending';
 					}
-					
+
 					if($scope.d2Element.saved) {
 						return 'input-success';
 					} else {
 						return 'input-error';
-					}            
-				}  
+					}
+				}
 				return '';
 			};
         }
@@ -663,7 +663,7 @@ var d2Directives = angular.module('d2Directives', [])
             d2Disabled: '=',
             d2SaveMethod: '&',
             d2Saved: '='
-            
+
         },
         link: function (scope, element, attrs) {
             scope.optionListOpen = false;
@@ -672,10 +672,10 @@ var d2Directives = angular.module('d2Directives', [])
                 var isClickedElementChildOfPopup = element
                     .find(event.target)
                     .length > 0;
-        
+
                 if (isClickedElementChildOfPopup)
                     return;
-        
+
                 scope.$applyAsync(function(){
                     scope.closeOptionList();
                 });
@@ -701,7 +701,7 @@ var d2Directives = angular.module('d2Directives', [])
             }
         },
         controller: function($scope, UsersService, OrgUnitFactory) {
-            $scope.displayOptions = [];       
+            $scope.displayOptions = [];
             $scope.userDisplayName = "";
 
             $scope.getNameForUserOject = function(userObject){
@@ -832,13 +832,13 @@ var d2Directives = angular.module('d2Directives', [])
             } else if(!scope.d2IsAttribute && scope.d2FileNames['SINGLE_EVENT'] && scope.d2Event && scope.d2Event.event === 'SINGLE_EVENT') {
                 scope.d2FileNames['SINGLE_EVENT'] = null;
             }
-            
+
             if(scope.d2IsAttribute && scope.d2Tei) {
                 scope.path = DHIS2URL + "/trackedEntityInstances/" + scope.d2Tei.trackedEntityInstance + "/" + scope.d2DataElementId + "/image";
             } else if(!scope.d2IsAttribute && scope.d2Event) {
                 scope.path = DHIS2URL + "/events/files?eventUid=" + scope.d2Event.event + "&dataElementUid=" + scope.d2DataElementId;
             }
-            
+
 
             scope.fetch = function() {
                 if(!scope.d2IsAttribute) {
@@ -1005,9 +1005,9 @@ var d2Directives = angular.module('d2Directives', [])
 
 .directive('d2Radio', function(  DateUtils ){
     return {
-        restrict: 'EA',            
+        restrict: 'EA',
         templateUrl: "d2-tracker/templates/radio-input.html",
-        scope: {            
+        scope: {
             id: '=',
             name: '@d2Name',
             d2Object: '=',
@@ -1016,10 +1016,11 @@ var d2Directives = angular.module('d2Directives', [])
             d2Required: '=',
             d2Options: '=',
             d2CallbackFunction: '&d2Function',
-            d2OptionFilter: '='
+            d2OptionFilter: '=',
+            d2RenderHorizontally: '='
         },
         link: function (scope, element, attrs) {
-            
+
         },
         controller: function($scope){
             var filteredOptions;
@@ -1030,22 +1031,22 @@ var d2Directives = angular.module('d2Directives', [])
                 if( angular.isObject(newObj) ){
                     $scope.d2Object = newObj;
                     $scope.model = {radio: $scope.d2Object[$scope.id] ? $scope.d2Object[$scope.id] : null};
-                }                
+                }
             });
 
             //In cases where the value is assigned with a program rule we need to set model.radio so that the UI updates.
             $scope.$watch('d2Object[id]',function(){
-                $scope.model = {radio: $scope.d2Object[$scope.id] ? $scope.d2Object[$scope.id] : null};         
+                $scope.model = {radio: $scope.d2Object[$scope.id] ? $scope.d2Object[$scope.id] : null};
             });
 
             $scope.model = {radio: $scope.d2Object[$scope.id] ? $scope.d2Object[$scope.id] : null};
-            
+
             $scope.saveValue = function( value ){
                 $scope.model.radio = value;
                 if( $scope.model.radio === $scope.d2Object[$scope.id] ){
                     $scope.model.radio = null;
                 }
-                
+
                 $scope.d2Object[$scope.id] = $scope.model.radio;
                 if( angular.isDefined( $scope.d2CallbackFunction ) ){
                     $scope.d2CallbackFunction({value: $scope.model.radio});
@@ -1143,9 +1144,9 @@ var d2Directives = angular.module('d2Directives', [])
 
 .directive('d2OrgUnitTree', function(OrgUnitFactory){
     return {
-        restrict: 'EA',            
+        restrict: 'EA',
         templateUrl: "d2-tracker/templates/orgunit-input.html",
-        scope: {            
+        scope: {
             selectedOrgUnitId: '@',
             id: '@',
             d2Object: '=',
@@ -1157,7 +1158,7 @@ var d2Directives = angular.module('d2Directives', [])
         link: function (scope, element, attrs) {
         },
         controller: function($scope, $modal){
-            
+
             if( !$scope.d2OrgUnitNames ){
                 $scope.d2OrgUnitNames = {};
             }
@@ -1168,9 +1169,9 @@ var d2Directives = angular.module('d2Directives', [])
                     fetchOu();
                 }
             });
-            
+
             function fetchOu(){
-                if( $scope.id && $scope.d2Object[$scope.id] ){                
+                if( $scope.id && $scope.d2Object[$scope.id] ){
                     OrgUnitFactory.getFromStoreOrServer($scope.d2Object[$scope.id]).then(function (response) {
                         if(response && response.n) {
                             $scope.d2OrgunitNames[$scope.d2Object[$scope.id]] = response.n;
@@ -1178,11 +1179,11 @@ var d2Directives = angular.module('d2Directives', [])
                     });
                 }
             }
-            
+
             fetchOu();
 
             $scope.showOrgUnitTree = function( dataElementId ){
-                
+
                 var modalInstance = $modal.open({
                     templateUrl: "d2-tracker/templates/orgunit-tree.html",
                     controller: 'OrgUnitTreeController',
@@ -1202,12 +1203,12 @@ var d2Directives = angular.module('d2Directives', [])
                         $scope.d2OrgunitNames = res.names;
                         if( angular.isDefined( $scope.d2CallbackFunction ) ){
                             $scope.d2CallbackFunction($scope.d2Object, dataElementId);
-                        }                            
-                    }                    
+                        }
+                    }
                 }, function () {
                 });
             };
-            
+
             $scope.removeSelectedOrgUnit = function( dataElementId ){
                 delete $scope.d2Object[dataElementId];
                 if( angular.isDefined( $scope.d2CallbackFunction ) ){
@@ -1215,16 +1216,16 @@ var d2Directives = angular.module('d2Directives', [])
                 }
             };
         }
-        
+
     };
 })
 .directive('d2Geometry', function(){
     return {
-        restrict: 'E',            
+        restrict: 'E',
         templateUrl: "d2-tracker/templates/geometry-input.html",
         scope: {
-            d2ObjectId: '@',            
-            d2Object: '=',            
+            d2ObjectId: '@',
+            d2Object: '=',
             d2CallbackFunction: '&',
             d2Disabled: '=',
             d2Required: '=',
@@ -1242,7 +1243,7 @@ var d2Directives = angular.module('d2Directives', [])
                             $scope.geometry.coordinates[0] = $scope.geometry.coordinate.longitude = coordinates[0];
                             $scope.geometry.coordinates[1] = $scope.geometry.coordinate.latitude = coordinates[1];
                         }
-                        
+
                     },
                     parseValues: function(){
                         $scope.geometry.coordinates[0] = $scope.geometry.coordinate.longitude = coordinateParser($scope.geometry.coordinates[0]);
@@ -1279,7 +1280,7 @@ var d2Directives = angular.module('d2Directives', [])
                         delete geo.coordinate;
                         $scope.d2Object[$scope.d2ObjectId] = angular.copy($scope.geometry);
                     }
-                    
+
                 },
 
                 POLYGON: {
@@ -1344,7 +1345,7 @@ var d2Directives = angular.module('d2Directives', [])
                         }
                     }
                 });
-                
+
                 modalInstance.result.then(function (geoJson){
                     $scope.d2Object[$scope.d2ObjectId] = geoJson;
                     $scope.d2CallbackFunction();
@@ -1374,11 +1375,11 @@ var d2Directives = angular.module('d2Directives', [])
 
 .directive('d2Map', function(){
     return {
-        restrict: 'E',            
+        restrict: 'E',
         templateUrl: "d2-tracker/templates/coordinate-input.html",
         scope: {
-            id: '@',            
-            d2Object: '=',            
+            id: '@',
+            d2Object: '=',
             d2CallbackFunction: '&d2Function',
             d2CallbackFunctionParamText: '=d2FunctionParamText',
             d2CallbackFunctionParamCoordinate: '=d2FunctionParamCoordinate',
@@ -1399,16 +1400,16 @@ var d2Directives = angular.module('d2Directives', [])
             });
 
             $scope.coordinateObject = angular.copy( $scope.d2Object );
-            
+
             function processCoordinate(){
-            	if( $scope.d2CoordinateFormat === 'TEXT' ){        
-                    if( $scope.d2Object[$scope.id] && $scope.d2Object[$scope.id] !== ''){                        
+            	if( $scope.d2CoordinateFormat === 'TEXT' ){
+                    if( $scope.d2Object[$scope.id] && $scope.d2Object[$scope.id] !== ''){
                         var coordinatePattern = /^\[-?\d+\.?\d+\,-?\d+\.?\d+\]$/;
                         if( !coordinatePattern.test( $scope.d2Object[$scope.id] ) ){
                             NotificationService.showNotifcationDialog($translate.instant('error'), $translate.instant('invalid_coordinate_format') + ":  " + $scope.d2Object[$scope.id] );
                         }
-                        
-                    	var coordinates = $scope.d2Object[$scope.id].slice(1,-1).split( ",");                        
+
+                    	var coordinates = $scope.d2Object[$scope.id].slice(1,-1).split( ",");
                     	if( !dhis2.validation.isNumber( coordinates[0] ) || !dhis2.validation.isNumber( coordinates[0] ) ){
                             NotificationService.showNotifcationDialog($translate.instant('error'), $translate.instant('invalid_coordinate_format') + ":  " + $scope.d2Object[$scope.id] );
                     	}
@@ -1417,18 +1418,18 @@ var d2Directives = angular.module('d2Directives', [])
                     else{
                         $scope.coordinateObject.coordinate = {};
                     }
-                }            
+                }
                 if( !$scope.coordinateObject.coordinate ){
                     $scope.coordinateObject.coordinate = {};
                 }
             };
-            
+
             processCoordinate();
-            
-            $scope.showMap = function(){                
-                
-            	processCoordinate();            	
-                            
+
+            $scope.showMap = function(){
+
+            	processCoordinate();
+
                 var modalInstance = $modal.open({
                     templateUrl: 'd2-tracker/templates/map.html',
                     controller: 'MapController',
@@ -1446,7 +1447,7 @@ var d2Directives = angular.module('d2Directives', [])
                         },
                     }
                 });
-                
+
                 modalInstance.result.then(function (geo) {
                     if(!geo) return;
                     var location = {
@@ -1457,15 +1458,15 @@ var d2Directives = angular.module('d2Directives', [])
                         if( dhis2.validation.isNumber( location.lat ) ){
                             location.lat = parseFloat( $filter('number')(location.lat, DHIS2COORDINATESIZE) );
                         }
-                        
+
                         if( dhis2.validation.isNumber( location.lng ) ){
                             location.lng = parseFloat( $filter('number')(location.lng, DHIS2COORDINATESIZE) );
                         }
-                        
-                        $scope.coordinateObject.coordinate.latitude = location.lat;
-                        $scope.coordinateObject.coordinate.longitude = location.lng;                        
 
-                        if( $scope.d2CoordinateFormat === 'TEXT' ){                        
+                        $scope.coordinateObject.coordinate.latitude = location.lat;
+                        $scope.coordinateObject.coordinate.longitude = location.lng;
+
+                        if( $scope.d2CoordinateFormat === 'TEXT' ){
                             $scope.d2Object[$scope.id] = '[' + location.lng + ',' + location.lat + ']';
                             if( angular.isDefined( $scope.d2CallbackFunction ) ){
                                 $scope.d2CallbackFunction( {arg1: $scope.d2CallbackFunctionParamText} );
@@ -1477,7 +1478,7 @@ var d2Directives = angular.module('d2Directives', [])
                             if( angular.isDefined( $scope.d2CallbackFunction ) ){
                                 $scope.d2CallbackFunction( {arg1: $scope.d2CallbackFunctionParamCoordinate} );
                             }
-                        }                                            
+                        }
                     } else {
                         $scope.coordinateObject.coordinate.polygon = location;
                         if( angular.isDefined( $scope.d2CallbackFunction ) ){
@@ -1487,8 +1488,8 @@ var d2Directives = angular.module('d2Directives', [])
                 }, function () {
                 });
             };
-            
-            $scope.coordinateInteracted = function (field, form) {        
+
+            $scope.coordinateInteracted = function (field, form) {
                 var status = false;
                 if (field) {
                     if(angular.isDefined(form)){
@@ -1496,13 +1497,13 @@ var d2Directives = angular.module('d2Directives', [])
                     }
                     else {
                         status = $scope.coordinateForm.$submitted || field.$dirty;
-                    }            
+                    }
                 }
                 return status;
             };
-            
+
             $scope.saveD2Coordinate = function(){
-                
+
                 var saveCoordinate = function( format, param ){
                     if( !$scope.coordinateObject.coordinate.longitude && !$scope.coordinateObject.coordinate.latitude ){
                         if( format === 'COORDINATE' ){
@@ -1511,50 +1512,50 @@ var d2Directives = angular.module('d2Directives', [])
                         else{
                             $scope.d2Object[$scope.id] = '';
                         }
-                        $scope.d2CallbackFunction( {arg1: param} );                            
+                        $scope.d2CallbackFunction( {arg1: param} );
                     }
                     else{
                         if( $scope.coordinateObject.coordinate.longitude && $scope.coordinateObject.coordinate.latitude ){
                             $scope.d2CallbackFunction( {arg1: param} );
                         }
-                    }                    
+                    }
                 };
-                
+
                 if( angular.isDefined( $scope.d2CallbackFunction ) ){
-                	
+
                 	if( dhis2.validation.isNumber( $scope.coordinateObject.coordinate.latitude ) ){
                 		$scope.coordinateObject.coordinate.latitude = parseFloat( $filter('number')($scope.coordinateObject.coordinate.latitude, DHIS2COORDINATESIZE) );
                 	}
-                	
+
                 	if( dhis2.validation.isNumber( $scope.coordinateObject.coordinate.longitude ) ){
                 		$scope.coordinateObject.coordinate.longitude = parseFloat( $filter('number')($scope.coordinateObject.coordinate.longitude, DHIS2COORDINATESIZE) );
                 	}
-                	
-                    if( $scope.d2CoordinateFormat === 'TEXT' ){                    
-                        $scope.d2Object[$scope.id] = '[' + $scope.coordinateObject.coordinate.longitude + ',' + $scope.coordinateObject.coordinate.latitude + ']';                        
+
+                    if( $scope.d2CoordinateFormat === 'TEXT' ){
+                        $scope.d2Object[$scope.id] = '[' + $scope.coordinateObject.coordinate.longitude + ',' + $scope.coordinateObject.coordinate.latitude + ']';
                         saveCoordinate( 'TEXT',  $scope.prStDe);
                     }
                     else{
                         $scope.d2Object.coordinate.latitude = $scope.coordinateObject.coordinate.latitude;
                         $scope.d2Object.coordinate.longitude = $scope.coordinateObject.coordinate.longitude;
-                        
-                        saveCoordinate( 'COORDINATE',  $scope.d2CallbackFunctionParam );                        
+
+                        saveCoordinate( 'COORDINATE',  $scope.d2CallbackFunctionParam );
                     }
                 }
-            };    
+            };
         },
         link: function (scope, element, attrs) {
-            
+
         }
     };
 })
 
 .directive('d2DateTime', function() {
     return {
-        restrict: 'E',            
-        templateUrl: "d2-tracker/templates/date-time-input.html",       
-        scope: {      
-            datetimeModel: '=',      
+        restrict: 'E',
+        templateUrl: "d2-tracker/templates/date-time-input.html",
+        scope: {
+            datetimeModel: '=',
             datetimeRequired: '=',
             datetimeDisabled: '=',
             datetimeDatePlaceholder: '@',
@@ -1571,12 +1572,12 @@ var d2Directives = angular.module('d2Directives', [])
 
         },
         link: function (scope, element, attrs) {
-           
+
         },
         controller: function($scope, ModalService, DateUtils) {
 			$scope.firstInput = true;
             $scope.dateTimeInit = function() {
-                $scope.dateTime = { date: null, time: null};        
+                $scope.dateTime = { date: null, time: null};
                 if(!$scope.datetimeModel[$scope.datetimeModelId]) {
                     return;
                 }
@@ -1587,11 +1588,11 @@ var d2Directives = angular.module('d2Directives', [])
 
             $scope.interacted = function (field, form) {
                 if(field || form) {
-                    var status = false;                
-                    status = form.$submitted || field.$touched;                 
+                    var status = false;
+                    status = form.$submitted || field.$touched;
                     return status;
                 }
-            };           
+            };
 
             $scope.saveDateTime = function(isDate) {
                 var splitDateTime = '';
@@ -1599,20 +1600,20 @@ var d2Directives = angular.module('d2Directives', [])
                 if($scope.datetimeModel[$scope.datetimeModelId]) {
                     splitDateTime = $scope.datetimeModel[$scope.datetimeModelId].split("T");
                 }
-        
+
                 if(isDate) {
                     $scope.datetimeModel[$scope.datetimeModelId] = DateUtils.formatFromUserToApi($scope.dateTime.date) + "T" + splitDateTime[1];
                 } else {
                     $scope.datetimeModel[$scope.datetimeModelId] = splitDateTime[0] + "T" + $scope.dateTime.time;
                 }
-                
+
                 if($scope.dateTime.date && $scope.dateTime.time && $scope.datetimeSaveMethode() && $scope.datetimeModel[$scope.datetimeModelId].match(/^(\d\d\d\d-\d\d-\d\dT\d\d:\d\d)$/)) {
                     if(isDate && $scope.datetimeField) {
                         $scope.datetimeSaveMethode()($scope.datetimeSaveMethodeParameter1, $scope.datetimeField.foo);
                     } else if($scope.datetimeField) {
                         $scope.datetimeSaveMethode()($scope.datetimeSaveMethodeParameter1, $scope.datetimeField.foo2);
                     } else {
-                        $scope.datetimeSaveMethode()($scope.datetimeSaveMethodeParameter1, $scope.datetimeSaveMethodeParameter2);                        
+                        $scope.datetimeSaveMethode()($scope.datetimeSaveMethodeParameter1, $scope.datetimeSaveMethodeParameter2);
                     }
                 } else if(!$scope.dateTime.date && !$scope.dateTime.time && $scope.datetimeSaveMethode()) {
                     $scope.datetimeModel[$scope.datetimeModelId] = null;
@@ -1627,7 +1628,7 @@ var d2Directives = angular.module('d2Directives', [])
                         headerText: 'warning',
                         bodyText: 'both_date_and_time'
                     };
-                    
+
                     ModalService.showModal({},modalOptions);
                     return;
                 }
@@ -1646,18 +1647,18 @@ var d2Directives = angular.module('d2Directives', [])
                     if($scope.datetimeElement.pending) {
                         return 'form-control input-pending';
                     }
-                    
+
                     if($scope.datetimeElement.saved) {
                         return 'form-control input-success';
                     } else if($scope.datetimeElement.updated) {
                         return 'form-control input-success';
                     } else {
                         return 'form-control input-error';
-                    }            
-                }  
+                    }
+                }
                 return 'form-control';
 			};
-			
+
 			$scope.clearDateTime = function() {
 				$scope.dateTime.date = null;
                 $scope.dateTime.time = null;
@@ -1671,11 +1672,11 @@ var d2Directives = angular.module('d2Directives', [])
 
 .directive('d2Time', function() {
     return {
-        restrict: 'E',            
+        restrict: 'E',
         templateUrl: "d2-tracker/templates/time-input.html",
-        scope: {      
+        scope: {
             timeModel: '=',
-            timeModelId: '=',     
+            timeModelId: '=',
             timeRequired: '=',
             timeDisabled: '=',
             timeSaveMethode: '&',
@@ -1688,12 +1689,12 @@ var d2Directives = angular.module('d2Directives', [])
 
         },
         link: function (scope, element, attrs) {
-            
+
         },
         controller: function($scope, ModalService) {
             $scope.use24 = $scope.timeFormat === '24h';
-            $scope.base = {};      
-                        
+            $scope.base = {};
+
             $scope.saveTime = function() {
                 if(!$scope.timeModel[$scope.timeModelId] || $scope.timeModel[$scope.timeModelId].match(/^(\d\d:\d\d)$/)) {
                     $scope.timeSaveMethode()($scope.timeSaveMethodeParameter1, $scope.timeSaveMethodeParameter2);
@@ -1702,11 +1703,11 @@ var d2Directives = angular.module('d2Directives', [])
                         headerText: 'warning',
                         bodyText: 'wrong_time_format'
                     };
-                    
+
                     ModalService.showModal({},modalOptions);
                     return;
                 }
-               
+
             };
 
             $scope.save12hTime = function(){
@@ -1714,7 +1715,7 @@ var d2Directives = angular.module('d2Directives', [])
                 $scope.saveTime();
 
             }
-            
+
             $scope.setFormat = function (format) {
                 if(format === 'AM') {
                     $scope.timeFormat = 'AM';
@@ -1730,7 +1731,7 @@ var d2Directives = angular.module('d2Directives', [])
                     return;
                 }
                 var timeSplit = time.split(':');
-                
+
                 if($scope.timeFormat === 'PM') {
                     timeSplit[0] = parseInt(timeSplit[0]) + 12 + '';
                 }
@@ -1776,13 +1777,13 @@ var d2Directives = angular.module('d2Directives', [])
                     if($scope.timeElement.pending) {
                         return 'form-control input-pending';
                     }
-                    
+
                     if($scope.timeElement.saved || $scope.timeElement.updated) {
                         return 'form-control input-success';
                     } else {
                         return 'form-control input-error';
-                    }            
-                }  
+                    }
+                }
                 return 'form-control';
             };
 
@@ -1793,8 +1794,8 @@ var d2Directives = angular.module('d2Directives', [])
 
 .directive("d2TimeParser", function() {
     return {
-        restrict: "A",         
-        require: "ngModel",         
+        restrict: "A",
+        require: "ngModel",
         link: function(scope, element, attrs, ngModel) {
             ngModel.$parsers.push(function(value){
                 if( /^(\d\d\d)$/.test(value)){
@@ -1813,7 +1814,7 @@ var d2Directives = angular.module('d2Directives', [])
                     return convertedValue;
                 }
 
-                return value;                
+                return value;
             });
         }
     };
@@ -1821,7 +1822,7 @@ var d2Directives = angular.module('d2Directives', [])
 
 .directive('d2Age', function( CalendarService, DateUtils ){
     return {
-        restrict: 'EA',            
+        restrict: 'EA',
         templateUrl: "d2-tracker/templates/age-input.html",
         scope: {
             id: '@',
@@ -1832,12 +1833,12 @@ var d2Directives = angular.module('d2Directives', [])
             d2CallbackFunction: '&d2Function'
         },
         link: function (scope, element, attrs) {
-            
+
         },
-        controller: function($scope){            
-            
+        controller: function($scope){
+
             $scope.age = {};
-            
+
             var setDate = function(){
                 if( $scope.id && $scope.d2Object && $scope.d2Object[$scope.id] ){
                     $scope.age.dob = $scope.d2Object[$scope.id];
@@ -1847,16 +1848,16 @@ var d2Directives = angular.module('d2Directives', [])
 
             setDate();
 
-            
+
             function formatAge(){
                 if( $scope.age && $scope.age.dob !== "" ){
-                    var _age = DateUtils.getAge( $scope.age.dob );                    
+                    var _age = DateUtils.getAge( $scope.age.dob );
                     $scope.age.years = _age.years;
                     $scope.age.months = _age.months;
                     $scope.age.days = _age.days;
                 }
             }
-            
+
             $scope.$watch('age.dob', function( newValue, oldValue ){
                 if( newValue !== oldValue ){
                     $scope.d2Object[$scope.id] = $scope.age.dob;
@@ -1871,24 +1872,24 @@ var d2Directives = angular.module('d2Directives', [])
                 if( newValue !== oldValue ){
                     $scope.age = {};
                     setDate();
-                }        
+                }
             });
 
-            $scope.saveDOB = function(){                
-                formatAge();                
+            $scope.saveDOB = function(){
+                formatAge();
             };
-            
+
             $scope.saveAge = function(){
                 var dob = moment().subtract({days: $scope.age.days ? $scope.age.days : 0, months: $scope.age.months ? $scope.age.months : 0, years: $scope.age.years ? $scope.age.years : 0});
                 $scope.age.dob = DateUtils.format( dob );
                 formatAge();
             };
-            
+
             $scope.removeAge = function(){
                 $scope.age = {};
             };
-            
-            $scope.ageInteracted = function (field, form) {        
+
+            $scope.ageInteracted = function (field, form) {
                 var status = false;
                 if (field) {
                     if(angular.isDefined(form)){
@@ -1896,7 +1897,7 @@ var d2Directives = angular.module('d2Directives', [])
                     }
                     else {
                         status = $scope.ageForm.$submitted || field.$dirty;
-                    }            
+                    }
                 }
                 return status;
             };
@@ -1906,7 +1907,7 @@ var d2Directives = angular.module('d2Directives', [])
 
 .directive('d2OptionList', function() {
     return {
-        restrict: 'E',            
+        restrict: 'E',
         templateUrl: "d2-tracker/templates/more-options-list.html",
         scope: {
 			d2Model: '=',
@@ -1927,10 +1928,10 @@ var d2Directives = angular.module('d2Directives', [])
                 var isClickedElementChildOfPopup = element
                     .find(event.target)
                     .length > 0;
-        
+
                 if (isClickedElementChildOfPopup)
                     return;
-        
+
                 scope.$applyAsync(function(){
                     scope.closeOptionList();
                 });
@@ -1979,7 +1980,7 @@ var d2Directives = angular.module('d2Directives', [])
                     currentFilteredOptions = filteredOptions;
                 } else {
                     currentFilteredOptions = $filter('filter')(filteredOptions, searchParam);
-                }                
+                }
                 setOptions();
             }
 
@@ -2027,27 +2028,27 @@ var d2Directives = angular.module('d2Directives', [])
                     $scope.d2MaxOptionSize = $scope.d2MaxOptionSize + 10;
                     setOptions();
                 }
-            };        
+            };
 
 			$scope.saveOption = function() {
                 $scope.d2Change();
-                
+
 			};
 
 			$scope.getInputNotifcationClass = function(id) {
 				var event = $scope.d2Model;
-				
+
 				if($scope.d2Element && $scope.d2Element.id === id && $scope.d2Element.event && $scope.d2Element.event === event.event) {
 					if($scope.d2Element.pending) {
 						return 'input-pending';
 					}
-					
+
 					if($scope.d2Element.saved) {
 						return 'input-success';
 					} else {
 						return 'input-error';
-					}            
-				}  
+					}
+				}
 				return '';
 			};
 		}
