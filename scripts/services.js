@@ -11,14 +11,14 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         return function(a, b) {
             if(!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
                 // property doesn't exist on either object
-                return 0; 
+                return 0;
             }
-        
-            const varA = (typeof a[key] === 'string') ? 
+
+            const varA = (typeof a[key] === 'string') ?
                 a[key].toUpperCase() : a[key];
-            const varB = (typeof b[key] === 'string') ? 
+            const varB = (typeof b[key] === 'string') ?
                 b[key].toUpperCase() : b[key];
-        
+
             let comparison = 0;
             if (varA > varB) {
                 comparison = 1;
@@ -457,7 +457,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 });
             }
             return def.promise;
-            
+
         },
         getAll: function(){
             var roles = SessionStorageService.get('USER_PROFILE');
@@ -493,7 +493,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                             }
                         });
                         programs = orderByFilter(programs, '-displayName').reverse();
-    
+
                         $rootScope.$apply(function(){
                             def.resolve({programs: programs});
                         });
@@ -559,12 +559,12 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                                     }
                                 }
                             }
-        
+
                             if(!selectedProgram || angular.isUndefined(selectedProgram) && programs.length > 0){
                                 selectedProgram = programs[0];
                             }
                         }
-    
+
                         $rootScope.$apply(function(){
                             def.resolve({programs: programs, selectedProgram: selectedProgram});
                         });
@@ -862,7 +862,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 
     var service = {};
 
-    var callApi = function(apiFn,tei,program){        
+    var callApi = function(apiFn,tei,program){
         return apiFn().then(function(response){
             return response;
         },function(error){
@@ -901,7 +901,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 
                 TCStorageService.currentStore.getAll('trackedEntityTypes').done(function(entities){
                     $rootScope.$apply(function(){
-                        
+
                         def.resolve(entities);
                     });
                 });
@@ -947,7 +947,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         var baseUrl = DHIS2URL + '/trackedEntityInstances/'+type;
         var url = baseUrl;
         var deferred = $q.defer();
-        
+
         if (format === "csv") {
             url = url+'.csv?ou=' + ouId + '&ouMode=' + ouMode;
         } else if (format === "xml") {
@@ -1068,7 +1068,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                             }
                         });
                     }
-    
+
                     return teiDictionary;
                 }, function(error){
                     var def = $q.defer();
@@ -1417,10 +1417,19 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                         if (att) {
                             att.mandatory = pAttribute.mandatory;
                             att.displayInListNoProgram = pAttribute.displayInList;
-                            
-                            if(pAttribute.renderOptionsAsRadio){
-                                att.renderOptionsAsRadio = pAttribute.renderOptionsAsRadio;
+
+                            att.renderOptionsAsRadio = false;
+                            if (pAttribute.renderType && pAttribute.renderType.DESKTOP) {
+                                const renderType = pAttribute.renderType.DESKTOP.type;
+                                if (renderType === 'VERTICAL_RADIOBUTTONS' || renderType === 'HORIZONTAL_RADIOBUTTONS') {
+                                    att.renderOptionsAsRadio = true;
+                                    att.renderRadioHorizontally = renderType === 'HORIZONTAL_RADIOBUTTONS';
+                                }
+                            } else if (pAttribute.renderOptionsAsRadio) {
+                                att.renderOptionsAsRadio = true;
+                                att.renderRadioHorizontally = false;
                             }
+
                             if(pAttribute.searchable)
                             {
                                 att.searchable = pAttribute.searchable;
@@ -1857,7 +1866,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
         getRules : function(programUid){
             var def = $q.defer();
             MetaDataFactory.getAll('constants').then(function(constants) {
-                
+
                 if($rootScope.customConstants) {
                     if(!constants) {
                         constants = [];
@@ -2018,7 +2027,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
     this.getAttributesQuery = function(attributes, enrollment){
 
         var query = {url: null, hasValue: false};
-        
+
         angular.forEach(attributes, function(attribute){
 
             if(attribute.valueType === 'DATE' || attribute.valueType === 'NUMBER' || attribute.valueType === 'DATETIME'){
@@ -2209,7 +2218,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                     if(grid.headers[grid.headers.length-1].column == 'TransferStatus'){
                         //entity.followUp =  entity.followUp || row[row.length-1] == "ACTIVE";
                     }
-                    
+
                     for (var i = 7; i < row.length; i++) {
                         if (row[i] && row[i] !== '') {
                             var val = row[i];
@@ -2305,7 +2314,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             setShowGridColumn(gridColumns[2],2, config, savedGridColumnsKeyMap);
 
             var gridColumnIndex = 2;
-            
+
             angular.forEach(attributes, function(attr){
                 if(attr.displayInListNoProgram){
                     gridColumnIndex++;
@@ -2866,7 +2875,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 if(eventUrl) eventUrl+="&";
                 eventUrl += "assignedUserMode="+eventFilter.assignedUserMode;
             }
-            if(!eventFilter.assignedUserMode || eventFilter.assignedUserMode == "PROVIDED" 
+            if(!eventFilter.assignedUserMode || eventFilter.assignedUserMode == "PROVIDED"
             && eventFilter.assignedUsers && eventFilter.assignedUsers.length > 0){
                 if(eventUrl) eventUrl+="&";
                 eventUrl += "assignedUser=";
@@ -2891,7 +2900,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 
         var pageRows = cachedData.rows.slice(pageStart, pageEnd);
         var data = {
-            rows: pageRows, 
+            rows: pageRows,
             height: pageRows.length,
             width: cachedData.width,
             headers: cachedData.headers,
@@ -2962,9 +2971,9 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                             workingListsByProgram[key] = orderByKeyFilter(workingListsByProgram[key], 'sortOrder', 'asc');
                         }
                     }
-                }  
+                }
             });
-        
+
         return fetchPromise
             .then(() => {
                 var workingLists = workingListsByProgram[program.id];
@@ -3078,7 +3087,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 if(searchGroup.uniqueGroup) uniqueSearch = true;
                 if(attr.valueType === 'DATE' || attr.valueType === 'AGE' || attr.valueType === 'NUMBER' || attr.valueType === 'DATETIME'){
                     var q = '';
-    
+
                     if(attr.operator === OperatorFactory.defaultOperators[0]){
                         var exactValue = searchGroup[attr.id] ? searchGroup[attr.id].exactValue : null;
                         if(exactValue == null) exactValue = searchGroup[attr.id];
@@ -3136,15 +3145,15 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                     if(value == null) value = searchGroup[attr.id];
                     if(value && value !== ''){
                         query.hasValue = true;
-    
+
                         if(angular.isArray(value)){
                             var q = '';
                             angular.forEach(value, function(val){
                                 q += val + ';';
                             });
-    
+
                             q = q.substr(0,q.length-1);
-    
+
                             if(query.url){
                                 if(q){
                                     numberOfSetAttributes++;
@@ -3169,7 +3178,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                                 }else{
                                     query.url = query.url + '&attribute=' + attr.id + ':LIKE:' + value;
                                 }
-                                
+
                             }
                             else{
                                 numberOfSetAttributes++;
@@ -3179,7 +3188,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                                 }else{
                                     query.url = 'attribute=' + attr.id + ':LIKE:' + value;
                                 }
-                                
+
                             }
                         }
                     }
@@ -3197,7 +3206,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
             return { orgUnit: searchOrgUnit, ouMode: searchGroup.ouMode.name, programOrTETUrl: programOrTETUrl, queryUrl: query.url, pager: pager, paging: !uniqueSearch, uniqueSearch: uniqueSearch };
         }
     }
-    
+
     this.getSearchConfigForProgram = function(program, orgUnitUniqueAsSearchGroup) {
         var def = $q.defer();
         if(!programSearchConfigsById[program.id]){
@@ -3324,7 +3333,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 
     this.programScopeSearch = function(programSearchGroup, tetSearchGroup, program, trackedEntityType, orgUnit, pager, sortColumn, onEditHeadersFromReponse){
         var params = getSearchParams(programSearchGroup, program, trackedEntityType, orgUnit, pager, searchScopes.PROGRAM);
-        
+
         if(params){
             var programScopeFetchAsyncFn = (pager, sortColumn) => {
                 var order = sortColumn && "order=" + sortColumn.id + ":" + sortColumn.direction;
@@ -3367,7 +3376,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                     var d = $q.defer();
                     if(error && error.data && error.data.message === "maxteicountreached"){
                         d.resolve({ status: "TOOMANYMATCHES", data: null});
-                    } 
+                    }
                     else {
                         d.reject(error);
                     }
@@ -3386,7 +3395,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 var order = sortColumn && "order=" + sortColumn.id + ":" + sortColumn.direction;
                 return TEIService.search(params.orgUnit.id, params.ouMode, order, params.programOrTETUrl, params.queryUrl, pager, params.paging);
             }
-            
+
             return tetScopeFetchAsyncFn(params.pager, sortColumn).then(function(response){
                 if (onEditHeadersFromReponse) {
                     response.headers = onEditHeadersFromReponse(response.headers, trackedEntityType.trackedEntityTypeAttributes);
@@ -3406,7 +3415,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                 var d = $q.defer();
                 if(error && error.data && error.data.message === "maxteicountreached"){
                     d.resolve({ status: "TOOMANYMATCHES", data: null});
-                } 
+                }
                 else {
                     d.reject(error);
                 }
@@ -3436,26 +3445,26 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
 
             ruleBoundData.textInEffect = false;
             ruleBoundData.keyDataInEffect = false;
-    
-            //In case the 
+
+            //In case the
             if(ruleBoundData.lastEventUpdated !== event) {
                 ruleBoundData.displayTextEffects = {};
                 ruleBoundData.displayKeyDataEffects = {};
                 ruleBoundData.lastEventUpdated = event;
             }
-            
+
             if(ruleeffects && ruleeffects[event]){
                 angular.forEach(ruleeffects[event], function(effect) {
                     var g= 1;
                     var u = g+1;
                     if(effect.location === location){
                         //This effect is affecting the local widget
-                        
+
                         //Round data to two decimals if it is a number:
                         if(dhis2.validation.isNumber(effect.data)){
                             effect.data = Math.round(effect.data*100)/100;
                         }
-                        
+
                         if(effect.action === "DISPLAYTEXT") {
                             //this action is display text. Make sure the displaytext is
                             //added to the local list of displayed texts
@@ -3467,7 +3476,7 @@ var trackerCaptureServices = angular.module('trackerCaptureServices', ['ngResour
                                 ruleBoundData.textInEffect = true;
                             }
                         }
-                        else if(effect.action === "DISPLAYKEYVALUEPAIR") {                    
+                        else if(effect.action === "DISPLAYKEYVALUEPAIR") {
                             //this action is display text. Make sure the displaytext is
                             //added to the local list of displayed texts
                             if(!angular.isObject(ruleBoundData.displayTextEffects[effect.id])){
