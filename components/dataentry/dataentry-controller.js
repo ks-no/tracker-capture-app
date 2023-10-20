@@ -1301,6 +1301,9 @@ trackerCapture.controller('DataEntryController',
     };
 
     $scope.showCreateEventOnEventCompletion = function (eventCreationAction, previousStageId) {
+        var stage = undefined;
+        var referralMode = undefined;
+
         var availableStages = [];
 
         //get applicable events
