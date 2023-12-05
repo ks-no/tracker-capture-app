@@ -38,7 +38,7 @@ export const INNREISE_ARBEIDSGIVER_NAVN_ID = 'uncjwHvpOWP';
 export const INDEKS_SISTE_ISOLASJONSDATO = 'ouppljsSJ3J';
 export const NAERKONTAKT_SISTE_KARANTENEDATO = 'nXIm2GscOIL';
 export const TUBERKULOSE_PAAVIST = 'jBPAXQUpJ08';
-export const TUBERKULOSE_LATENT = 'CRKQzPXsh0G';
+export const TUBERKULOSE_LATENT = 'mYRD7kYEVug';
 export const AS_TYPE_SYKDOM = 'm7znL8vmzbD';
 
 export const PROFIL_NASJONALT_FELLES_HJELPENUMMER = 'WBjHgYajTsb';
